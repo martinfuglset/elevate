@@ -18,9 +18,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        'serif': ['ItemsTextTrial', 'Georgia', 'serif'],
-        'sans': ['SuisseIntl', 'system-ui', '-apple-system', 'sans-serif'],
-        'mono': ['SuisseIntlMono', 'Monaco', 'Consolas', 'monospace'],
+        sans: ['Geist', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -56,14 +54,6 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        custom: {
-          teal: "#023D3E",
-        },
-        black: "#000000",
-        white: "#FFFFFF",
-        teal: "#023D3E",
-        cream: "#EAE8DF",
-        gray: "#969696",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -7,7 +7,7 @@
 
 export const fonts = {
   serif: {
-    family: 'ItemsTextTrial, Georgia, serif',
+    family: 'Inter, system-ui, -apple-system, sans-serif',
     weights: {
       normal: 400,
       medium: 500,
@@ -16,7 +16,7 @@ export const fonts = {
     },
   },
   sans: {
-    family: 'SuisseIntl, system-ui, -apple-system, sans-serif',
+    family: 'Inter, system-ui, -apple-system, sans-serif',
     weights: {
       light: 300,
       normal: 400,
@@ -26,7 +26,7 @@ export const fonts = {
     },
   },
   mono: {
-    family: 'SuisseIntlMono, Monaco, Consolas, monospace',
+    family: 'Inter, system-ui, -apple-system, sans-serif',
     weights: {
       normal: 400,
       medium: 500,
@@ -36,23 +36,11 @@ export const fonts = {
 } as const
 
 // ============================================================================
-// COLORS
-// ============================================================================
-
-export const colors = {
-  black: '#000000',
-  white: '#FFFFFF',
-  teal: '#023D3E',
-  cream: '#EAE8DF',
-  gray: '#969696',
-} as const
-
-// ============================================================================
 // TYPOGRAPHY SCALE
 // ============================================================================
 
 export const typography = {
-  // Headings - Use serif font
+  // Headings - Use Inter font
   h1: {
     fontFamily: fonts.serif.family,
     fontWeight: fonts.serif.weights.normal,
@@ -96,7 +84,7 @@ export const typography = {
     letterSpacing: '0',
   },
 
-  // Body text - Use sans font
+  // Body text - Use Inter font
   body: {
     fontFamily: fonts.sans.family,
     fontWeight: fonts.sans.weights.normal,
@@ -119,7 +107,7 @@ export const typography = {
     letterSpacing: '0',
   },
 
-  // Caption and labels - Use sans font
+  // Caption and labels - Use Inter font
   caption: {
     fontFamily: fonts.sans.family,
     fontWeight: fonts.sans.weights.normal,
@@ -135,7 +123,7 @@ export const typography = {
     letterSpacing: '0.01em',
   },
 
-  // Code and technical text - Use mono font
+  // Code and technical text - Use Inter font
   code: {
     fontFamily: fonts.mono.family,
     fontWeight: fonts.mono.weights.normal,
@@ -224,10 +212,31 @@ export function getFontFamily(type: keyof typeof fonts) {
 }
 
 /**
- * Get color value
+ * Get spacing value
  */
-export function getColor(color: keyof typeof colors) {
-  return colors[color]
+export function getSpacing(size: keyof typeof spacing) {
+  return spacing[size]
+}
+
+/**
+ * Get border radius value
+ */
+export function getBorderRadius(size: keyof typeof borderRadius) {
+  return borderRadius[size]
+}
+
+/**
+ * Get shadow value
+ */
+export function getShadow(size: keyof typeof shadows) {
+  return shadows[size]
+}
+
+/**
+ * Get breakpoint value
+ */
+export function getBreakpoint(size: keyof typeof breakpoints) {
+  return breakpoints[size]
 }
 
 // ============================================================================
@@ -239,13 +248,6 @@ export const cssVariables = {
   '--font-serif': fonts.serif.family,
   '--font-sans': fonts.sans.family,
   '--font-mono': fonts.mono.family,
-
-  // Colors
-  '--color-black': colors.black,
-  '--color-white': colors.white,
-  '--color-teal': colors.teal,
-  '--color-cream': colors.cream,
-  '--color-gray': colors.gray,
 
   // Spacing
   '--spacing-xs': spacing.xs,
@@ -288,13 +290,6 @@ export const tailwindConfig = {
         sans: [fonts.sans.family.split(',')[0], 'sans-serif'],
         mono: [fonts.mono.family.split(',')[0], 'monospace'],
       },
-      colors: {
-        black: colors.black,
-        white: colors.white,
-        teal: colors.teal,
-        cream: colors.cream,
-        gray: colors.gray,
-      },
       spacing,
       borderRadius,
       boxShadow: shadows,
@@ -307,8 +302,8 @@ export const tailwindConfig = {
 // ============================================================================
 
 export type FontType = keyof typeof fonts
-export type ColorType = keyof typeof colors
 export type TypographyVariant = keyof typeof typography
 export type SpacingSize = keyof typeof spacing
 export type BorderRadiusSize = keyof typeof borderRadius
-export type ShadowSize = keyof typeof shadows 
+export type ShadowSize = keyof typeof shadows
+export type BreakpointSize = keyof typeof breakpoints 

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { getTypographyStyles, getFontFamily, getColor, typography, fonts, colors } from './design-system'
+import { getTypographyStyles, getFontFamily, typography, fonts } from './design-system'
 
 /**
  * React hook for applying design system styles
@@ -30,20 +30,10 @@ export function useDesignSystem() {
       mono: () => getFontFamily('mono'),
     },
 
-    // Color helpers
-    colors: {
-      black: () => getColor('black'),
-      white: () => getColor('white'),
-      teal: () => getColor('teal'),
-      cream: () => getColor('cream'),
-      gray: () => getColor('gray'),
-    },
-
     // Direct access to design tokens
     tokens: {
       typography,
       fonts,
-      colors,
     },
   }), [])
 

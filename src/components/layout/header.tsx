@@ -37,7 +37,7 @@ export function Header({ className }: { className?: string }) {
   }, [toggleSidebar])
 
   return (
-    <header className={cn("flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px] lg:px-6", className)}>
+    <header className={cn("flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6", className)}>
       {/* Mobile menu */}
       <Sheet>
         <SheetTrigger asChild>
@@ -60,7 +60,7 @@ export function Header({ className }: { className?: string }) {
                 alt="Elevate Logo"
                 width={800}
                 height={800}
-                className="h-20 w-20 lg:h-24 lg:w-24"
+                className="h-12 w-12 lg:h-16 lg:w-16"
               />
               <span className="sr-only">Elevate</span>
             </Link>
