@@ -5,19 +5,20 @@ import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { useLanguage } from '@/lib/language-context'
+import { handleAnchorClick } from '@/lib/utils'
 
 export function Footer() {
   const { t } = useLanguage()
   
   const productLinks = [
-    { href: "#", label: t('footer.product.features') },
-    { href: "#", label: t('footer.product.pricing') },
-    { href: "#", label: t('footer.product.integrations') },
-    { href: "#", label: t('footer.product.api') }
+    { href: "#features", label: t('footer.product.features') },
+    { href: "#pricing", label: t('footer.product.pricing') },
+    { href: "#demo", label: t('footer.product.integrations') },
+    { href: "#about", label: t('footer.product.api') }
   ]
 
   const companyLinks = [
-    { href: "#", label: t('footer.company.about') },
+    { href: "#about", label: t('footer.company.about') },
     { href: "#", label: t('footer.company.careers') },
     { href: "#", label: t('footer.company.blog') },
     { href: "#", label: t('footer.company.contact') }
@@ -30,7 +31,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-white border-t border-slate-200">
+    <footer id="demo" className="bg-white border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -61,7 +62,11 @@ export function Footer() {
             <ul className="space-y-2">
               {productLinks.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-slate-600 hover:text-slate-900 transition-colors">
+                  <Link 
+                    href={link.href} 
+                    className="text-slate-600 hover:text-slate-900 transition-colors"
+                    onClick={(e) => handleAnchorClick(link.href, e)}
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -75,7 +80,11 @@ export function Footer() {
             <ul className="space-y-2">
               {companyLinks.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-slate-600 hover:text-slate-900 transition-colors">
+                  <Link 
+                    href={link.href} 
+                    className="text-slate-600 hover:text-slate-900 transition-colors"
+                    onClick={(e) => handleAnchorClick(link.href, e)}
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -97,6 +106,7 @@ export function Footer() {
                 key={link.label}
                 href={link.href} 
                 className="text-slate-600 hover:text-slate-900 text-sm transition-colors"
+                onClick={(e) => handleAnchorClick(link.href, e)}
               >
                 {link.label}
               </Link>

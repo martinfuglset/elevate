@@ -22,12 +22,6 @@ export const pages: PageConfig[] = [
     inMainNav: true,
   },
   {
-    name: 'Needs Assessment',
-    href: '/needs-assessment',
-    icon: ClipboardList,
-    inMainNav: true,
-  },
-  {
     name: 'Program Library',
     href: '/program-library',
     icon: BookOpen,

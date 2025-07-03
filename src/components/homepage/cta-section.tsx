@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useLanguage } from '@/lib/language-context'
+import { handleAnchorClick } from '@/lib/utils'
 
 export function CTASection() {
   const { t } = useLanguage()
@@ -26,7 +27,7 @@ export function CTASection() {
             <Link href="/login">{t('cta.button')}</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg">
-            <Link href="#demo">{t('hero.cta.secondary')}</Link>
+            <Link href="#demo" onClick={(e) => handleAnchorClick("#demo", e)}>{t('hero.cta.secondary')}</Link>
           </Button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { useLanguage } from '@/lib/language-context'
+import { handleAnchorClick } from '@/lib/utils'
 
 export function Header() {
   const { t } = useLanguage()
@@ -44,6 +45,7 @@ export function Header() {
                 key={item.href}
                 href={item.href} 
                 className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
+                onClick={(e) => handleAnchorClick(item.href, e)}
               >
                 {item.label}
               </Link>

@@ -21,7 +21,7 @@ export function StatsSection() {
   ]
 
   return (
-    <section className="py-20 bg-gradient-to-r from-slate-50 to-white">
+    <section id="about" className="py-20 bg-gradient-to-r from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           {stats.map((stat, index) => (

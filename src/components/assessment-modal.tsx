@@ -26,7 +26,8 @@ import {
   TrendingUp,
   BookOpen,
   Clock,
-  Star
+  Star,
+  X
 } from 'lucide-react'
 
 interface AssessmentData {
@@ -55,6 +56,12 @@ interface AssessmentData {
     learningStyle: string
     supportNeeded: string
   }
+}
+
+interface AssessmentModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onComplete?: (data: AssessmentData) => void
 }
 
 const initialData: AssessmentData = {
@@ -135,7 +142,7 @@ const learningFormats = [
   'Action Learning Projects'
 ]
 
-export default function NeedsAssessmentPage() {
+export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModalProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [data, setData] = useState<AssessmentData>(initialData)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -167,8 +174,14 @@ export default function NeedsAssessmentPage() {
 
   const handleSubmit = () => {
     setIsSubmitted(true)
-    // Here you would typically send the data to your backend
-    console.log('Assessment data:', data)
+    if (onComplete) onComplete(data)
+  }
+
+  const handleClose = () => {
+    setCurrentStep(1)
+    setData(initialData)
+    setIsSubmitted(false)
+    onClose()
   }
 
   const renderPersonalInfo = () => (
@@ -257,18 +270,18 @@ export default function NeedsAssessmentPage() {
               <SelectValue placeholder="Select leadership level" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Team Lead">Team Lead</SelectItem>
-              <SelectItem value="Manager">Manager</SelectItem>
-              <SelectItem value="Director">Director</SelectItem>
-              <SelectItem value="VP">VP</SelectItem>
-              <SelectItem value="C-Level">C-Level</SelectItem>
+              <SelectItem value="frontline">Frontline Manager</SelectItem>
+              <SelectItem value="middle">Middle Manager</SelectItem>
+              <SelectItem value="senior">Senior Manager</SelectItem>
+              <SelectItem value="executive">Executive</SelectItem>
+              <SelectItem value="c-level">C-Level</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
-      
-      <div className="space-y-4">
-        <Label>What are your biggest leadership challenges? (Select up to 5)</Label>
+
+      <div className="space-y-2">
+        <Label>What are your biggest leadership challenges? (Select all that apply)</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {challenges.map((challenge) => (
             <div key={challenge} className="flex items-center space-x-2">
@@ -288,8 +301,8 @@ export default function NeedsAssessmentPage() {
         </div>
       </div>
 
-      <div className="space-y-4">
-        <Label>What are your leadership strengths? (Select up to 5)</Label>
+      <div className="space-y-2">
+        <Label>What are your leadership strengths? (Select all that apply)</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {strengths.map((strength) => (
             <div key={strength} className="flex items-center space-x-2">
@@ -331,17 +344,17 @@ export default function NeedsAssessmentPage() {
             <SelectValue placeholder="Select timeframe" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="3 months">3 months</SelectItem>
-            <SelectItem value="6 months">6 months</SelectItem>
-            <SelectItem value="1 year">1 year</SelectItem>
-            <SelectItem value="2 years">2 years</SelectItem>
-            <SelectItem value="Long-term">Long-term (2+ years)</SelectItem>
+            <SelectItem value="3-months">3 months</SelectItem>
+            <SelectItem value="6-months">6 months</SelectItem>
+            <SelectItem value="1-year">1 year</SelectItem>
+            <SelectItem value="2-years">2 years</SelectItem>
+            <SelectItem value="ongoing">Ongoing development</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div className="space-y-4">
-        <Label>Which specific areas would you like to develop? (Select up to 5)</Label>
+      <div className="space-y-2">
+        <Label>Which specific areas would you like to develop? (Select all that apply)</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {specificAreas.map((area) => (
             <div key={area} className="flex items-center space-x-2">
@@ -362,12 +375,12 @@ export default function NeedsAssessmentPage() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="motivation">What motivates you to develop your leadership skills?</Label>
+        <Label htmlFor="motivation">What motivates you to develop as a leader?</Label>
         <Textarea
           id="motivation"
           value={data.developmentGoals.motivation}
           onChange={(e) => updateData('developmentGoals', 'motivation', e.target.value)}
-          placeholder="Share what drives your leadership development journey..."
+          placeholder="Share what drives your leadership development..."
           rows={3}
         />
       </div>
@@ -376,7 +389,7 @@ export default function NeedsAssessmentPage() {
 
   const renderLearningPreferences = () => (
     <div className="space-y-6">
-      <div className="space-y-4">
+      <div className="space-y-2">
         <Label>What learning formats do you prefer? (Select all that apply)</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {learningFormats.map((format) => (
@@ -398,16 +411,16 @@ export default function NeedsAssessmentPage() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="timeAvailability">How much time can you dedicate to learning per week?</Label>
+        <Label htmlFor="timeAvailability">How much time can you dedicate to learning weekly?</Label>
         <Select value={data.learningPreferences.timeAvailability} onValueChange={(value) => updateData('learningPreferences', 'timeAvailability', value)}>
           <SelectTrigger>
             <SelectValue placeholder="Select time availability" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="1-2 hours">1-2 hours</SelectItem>
-            <SelectItem value="3-5 hours">3-5 hours</SelectItem>
-            <SelectItem value="6-10 hours">6-10 hours</SelectItem>
-            <SelectItem value="10+ hours">10+ hours</SelectItem>
+            <SelectItem value="1-2-hours">1-2 hours</SelectItem>
+            <SelectItem value="3-5-hours">3-5 hours</SelectItem>
+            <SelectItem value="6-10-hours">6-10 hours</SelectItem>
+            <SelectItem value="10+hours">10+ hours</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -417,7 +430,7 @@ export default function NeedsAssessmentPage() {
         <RadioGroup value={data.learningPreferences.learningStyle} onValueChange={(value) => updateData('learningPreferences', 'learningStyle', value)}>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="visual" id="visual" />
-            <Label htmlFor="visual">Visual (diagrams, videos, charts)</Label>
+            <Label htmlFor="visual">Visual (diagrams, videos, infographics)</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="auditory" id="auditory" />
@@ -523,7 +536,7 @@ export default function NeedsAssessmentPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <Button className="w-full">
+              <Button className="w-full" onClick={handleClose}>
                 <BookOpen className="h-4 w-4 mr-2" />
                 Start Learning Path
               </Button>
@@ -537,83 +550,82 @@ export default function NeedsAssessmentPage() {
     </div>
   )
 
-  if (isSubmitted) {
-    return (
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Needs Assessment</h1>
-            <p className="text-muted-foreground">
-              Your personalized recommendations are ready
-            </p>
-          </div>
-        </div>
-        {renderRecommendations()}
-      </div>
-    )
-  }
+  if (!isOpen) return null
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Leadership Needs Assessment</h1>
-          <p className="text-muted-foreground">
-            Help us understand your leadership development needs
-          </p>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span>Step {currentStep} of {totalSteps}</span>
-          <span>{Math.round(progress)}% Complete</span>
-        </div>
-        <Progress value={progress} className="h-2" />
-      </div>
-
-      {/* Step Content */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ClipboardList className="h-5 w-5" />
-            {currentStep === 1 && 'Personal Information'}
-            {currentStep === 2 && 'Current Leadership Context'}
-            {currentStep === 3 && 'Development Goals'}
-            {currentStep === 4 && 'Learning Preferences'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {currentStep === 1 && renderPersonalInfo()}
-          {currentStep === 2 && renderCurrentLeadership()}
-          {currentStep === 3 && renderDevelopmentGoals()}
-          {currentStep === 4 && renderLearningPreferences()}
-        </CardContent>
-      </Card>
-
-      {/* Navigation */}
-      <div className="flex justify-between">
-        <Button
-          variant="outline"
-          onClick={handlePrevious}
-          disabled={currentStep === 1}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Previous
-        </Button>
-        
-        {currentStep < totalSteps ? (
-          <Button onClick={handleNext}>
-            Next
-            <ArrowRight className="h-4 w-4 ml-2" />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center p-6 border-b">
+          <div>
+            <h1 className="text-2xl font-bold">Leadership Needs Assessment</h1>
+            <p className="text-muted-foreground">
+              Help us understand your leadership development needs
+            </p>
+          </div>
+          <Button variant="ghost" size="sm" onClick={handleClose}>
+            <X className="h-5 w-5" />
           </Button>
-        ) : (
-          <Button onClick={handleSubmit}>
-            Submit Assessment
-            <CheckCircle className="h-4 w-4 ml-2" />
-          </Button>
-        )}
+        </div>
+
+        <div className="p-6">
+          {isSubmitted ? (
+            renderRecommendations()
+          ) : (
+            <>
+              {/* Progress Bar */}
+              <div className="space-y-2 mb-6">
+                <div className="flex justify-between text-sm">
+                  <span>Step {currentStep} of {totalSteps}</span>
+                  <span>{Math.round(progress)}% Complete</span>
+                </div>
+                <Progress value={progress} className="h-2" />
+              </div>
+
+              {/* Step Content */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ClipboardList className="h-5 w-5" />
+                    {currentStep === 1 && 'Personal Information'}
+                    {currentStep === 2 && 'Current Leadership Context'}
+                    {currentStep === 3 && 'Development Goals'}
+                    {currentStep === 4 && 'Learning Preferences'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {currentStep === 1 && renderPersonalInfo()}
+                  {currentStep === 2 && renderCurrentLeadership()}
+                  {currentStep === 3 && renderDevelopmentGoals()}
+                  {currentStep === 4 && renderLearningPreferences()}
+                </CardContent>
+              </Card>
+
+              {/* Navigation */}
+              <div className="flex justify-between mt-6">
+                <Button
+                  variant="outline"
+                  onClick={handlePrevious}
+                  disabled={currentStep === 1}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Previous
+                </Button>
+                
+                {currentStep < totalSteps ? (
+                  <Button onClick={handleNext}>
+                    Next
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                ) : (
+                  <Button onClick={handleSubmit}>
+                    Submit Assessment
+                    <CheckCircle className="h-4 w-4 ml-2" />
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )
