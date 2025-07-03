@@ -28,7 +28,6 @@ import {
   BookOpen,
   Clock,
   Star,
-  X,
   Loader2,
   GripVertical,
   Calendar,
@@ -72,12 +71,6 @@ interface ProgramModule {
   level: string
   category: string
   order: number
-}
-
-interface AssessmentModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onComplete?: (data: AssessmentData) => void
 }
 
 const initialData: AssessmentData = {
@@ -245,7 +238,7 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
   return baseModules.sort((a, b) => a.order - b.order)
 }
 
-export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModalProps) {
+export default function AssessmentPage() {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const [data, setData] = useState<AssessmentData>(initialData)
@@ -288,21 +281,10 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
       const modules = generateProgramModules(data)
       setProgramModules(modules)
       setIsGenerating(false)
-      if (onComplete) onComplete(data)
     }, 3000)
   }
 
-  const handleClose = () => {
-    setCurrentStep(1)
-    setData(initialData)
-    setIsSubmitted(false)
-    setIsGenerating(false)
-    setProgramModules([])
-    onClose()
-  }
-
   const handleGetStarted = () => {
-    handleClose()
     router.push('/pricing')
   }
 
@@ -705,86 +687,83 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
     </div>
   )
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-6 border-b">
-          <div>
-            <h1 className="text-2xl font-bold">Leadership Needs Assessment</h1>
-            <p className="text-muted-foreground">
-              Help us understand your leadership development needs
-            </p>
-          </div>
-          <Button variant="ghost" size="sm" onClick={handleClose}>
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <div className="p-6">
-          {isSubmitted ? (
-            isGenerating ? (
-              renderGeneratingProgram()
-            ) : (
-              renderProgramRecommendation()
-            )
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {isSubmitted ? (
+          isGenerating ? (
+            <div className="bg-white rounded-lg shadow-xl p-8">
+              {renderGeneratingProgram()}
+            </div>
           ) : (
-            <>
-              {/* Progress Bar */}
-              <div className="space-y-2 mb-6">
-                <div className="flex justify-between text-sm">
-                  <span>Step {currentStep} of {totalSteps}</span>
-                  <span>{Math.round(progress)}% Complete</span>
-                </div>
-                <Progress value={progress} className="h-2" />
+            <div className="bg-white rounded-lg shadow-xl p-8">
+              {renderProgramRecommendation()}
+            </div>
+          )
+        ) : (
+          <>
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                Leadership Needs Assessment
+              </h1>
+              <p className="text-slate-600">
+                Help us understand your leadership development needs
+              </p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="space-y-2 mb-6">
+              <div className="flex justify-between text-sm">
+                <span>Step {currentStep} of {totalSteps}</span>
+                <span>{Math.round(progress)}% Complete</span>
               </div>
+              <Progress value={progress} className="h-2" />
+            </div>
 
-              {/* Step Content */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <ClipboardList className="h-5 w-5" />
-                    {currentStep === 1 && 'Personal Information'}
-                    {currentStep === 2 && 'Current Leadership Context'}
-                    {currentStep === 3 && 'Development Goals'}
-                    {currentStep === 4 && 'Learning Preferences'}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {currentStep === 1 && renderPersonalInfo()}
-                  {currentStep === 2 && renderCurrentLeadership()}
-                  {currentStep === 3 && renderDevelopmentGoals()}
-                  {currentStep === 4 && renderLearningPreferences()}
-                </CardContent>
-              </Card>
+            {/* Step Content */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ClipboardList className="h-5 w-5" />
+                  {currentStep === 1 && 'Personal Information'}
+                  {currentStep === 2 && 'Current Leadership Context'}
+                  {currentStep === 3 && 'Development Goals'}
+                  {currentStep === 4 && 'Learning Preferences'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {currentStep === 1 && renderPersonalInfo()}
+                {currentStep === 2 && renderCurrentLeadership()}
+                {currentStep === 3 && renderDevelopmentGoals()}
+                {currentStep === 4 && renderLearningPreferences()}
+              </CardContent>
+            </Card>
 
-              {/* Navigation */}
-              <div className="flex justify-between mt-6">
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  disabled={currentStep === 1}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
+            {/* Navigation */}
+            <div className="flex justify-between mt-6">
+              <Button
+                variant="outline"
+                onClick={handlePrevious}
+                disabled={currentStep === 1}
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Previous
+              </Button>
+              
+              {currentStep < totalSteps ? (
+                <Button onClick={handleNext}>
+                  Next
+                  <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
-                
-                {currentStep < totalSteps ? (
-                  <Button onClick={handleNext}>
-                    Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                ) : (
-                  <Button onClick={handleSubmit}>
-                    Submit Assessment
-                    <CheckCircle className="h-4 w-4 ml-2" />
-                  </Button>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+              ) : (
+                <Button onClick={handleSubmit}>
+                  Submit Assessment
+                  <CheckCircle className="h-4 w-4 ml-2" />
+                </Button>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

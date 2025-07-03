@@ -94,9 +94,11 @@ export function HeroSection() {
         {t('hero.subtitle')}
       </p>
       <div className="flex justify-center mb-12">
-        <Button size="lg" className="px-8 py-3 text-lg" onClick={() => setShowAssessment(true)}>
-          Take need assessment now
-          <ArrowRight className="ml-2 h-5 w-5" />
+        <Button asChild size="lg" className="px-8 py-3 text-lg">
+          <Link href="/assessment">
+            Take need assessment now
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
         </Button>
       </div>
 
