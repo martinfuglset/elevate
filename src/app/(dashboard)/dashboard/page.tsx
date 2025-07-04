@@ -21,7 +21,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-medium">1,234</div>
             <p className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpRight className="h-4 w-4 mr-1 text-green-600" />
+              <ArrowUpRight className="h-4 w-4 mr-1 text-gray-600" />
               +12.5% from last month
             </p>
           </CardContent>
@@ -34,7 +34,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-medium">892</div>
             <p className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpRight className="h-4 w-4 mr-1 text-green-600" />
+              <ArrowUpRight className="h-4 w-4 mr-1 text-gray-600" />
               +8.2% from last month
             </p>
           </CardContent>
@@ -47,7 +47,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-medium">3.2%</div>
             <p className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpRight className="h-4 w-4 mr-1 text-green-600" />
+              <ArrowUpRight className="h-4 w-4 mr-1 text-gray-600" />
               +0.8% from last month
             </p>
           </CardContent>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-medium">$12,345</div>
             <p className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpRight className="h-4 w-4 mr-1 text-green-600" />
+              <ArrowUpRight className="h-4 w-4 mr-1 text-gray-600" />
               +15.3% from last month
             </p>
           </CardContent>

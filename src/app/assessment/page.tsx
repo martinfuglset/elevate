@@ -32,7 +32,9 @@ import {
   GripVertical,
   Calendar,
   Award,
-  Zap
+  Zap,
+  User,
+  Sparkles
 } from 'lucide-react'
 
 interface AssessmentData {
@@ -63,14 +65,8 @@ interface AssessmentData {
   }
 }
 
-interface ProgramModule {
-  id: string
-  title: string
-  description: string
-  duration: string
-  level: string
-  category: string
-  order: number
+interface ValidationErrors {
+  [key: string]: string[]
 }
 
 const initialData: AssessmentData = {
@@ -161,7 +157,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '4 weeks',
       level: 'Beginner',
       category: 'Core',
-      order: 1
+      order: 1,
+      source: 'recommended'
     },
     {
       id: '2',
@@ -170,7 +167,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '3 weeks',
       level: 'Intermediate',
       category: 'Core',
-      order: 2
+      order: 2,
+      source: 'recommended'
     },
     {
       id: '3',
@@ -179,7 +177,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '5 weeks',
       level: 'Intermediate',
       category: 'Strategy',
-      order: 3
+      order: 3,
+      source: 'recommended'
     },
     {
       id: '4',
@@ -188,7 +187,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '4 weeks',
       level: 'Intermediate',
       category: 'Team',
-      order: 4
+      order: 4,
+      source: 'recommended'
     },
     {
       id: '5',
@@ -197,7 +197,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '3 weeks',
       level: 'Advanced',
       category: 'Change',
-      order: 5
+      order: 5,
+      source: 'recommended'
     },
     {
       id: '6',
@@ -206,7 +207,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '4 weeks',
       level: 'Advanced',
       category: 'Development',
-      order: 6
+      order: 6,
+      source: 'recommended'
     }
   ]
 
@@ -219,7 +221,8 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '3 weeks',
       level: 'Intermediate',
       category: 'Communication',
-      order: 7
+      order: 7,
+      source: 'recommended'
     })
   }
 
@@ -231,11 +234,107 @@ const generateProgramModules = (data: AssessmentData): ProgramModule[] => {
       duration: '6 weeks',
       level: 'Advanced',
       category: 'Executive',
-      order: 8
+      order: 8,
+      source: 'recommended'
     })
   }
 
   return baseModules.sort((a, b) => a.order - b.order)
+}
+
+// Additional modules available in the sidebar
+const additionalModules: ProgramModule[] = [
+  {
+    id: 'sidebar-1',
+    title: 'Crisis Leadership',
+    description: 'Lead effectively during challenging times and crises',
+    duration: '3 weeks',
+    level: 'Advanced',
+    category: 'Crisis',
+    order: 1,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-2',
+    title: 'Digital Transformation Leadership',
+    description: 'Lead digital initiatives and technology adoption',
+    duration: '4 weeks',
+    level: 'Advanced',
+    category: 'Digital',
+    order: 2,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-3',
+    title: 'Cross-Cultural Leadership',
+    description: 'Lead diverse teams across different cultures',
+    duration: '3 weeks',
+    level: 'Intermediate',
+    category: 'Diversity',
+    order: 3,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-4',
+    title: 'Innovation Leadership',
+    description: 'Foster creativity and drive innovation in your organization',
+    duration: '4 weeks',
+    level: 'Advanced',
+    category: 'Innovation',
+    order: 4,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-5',
+    title: 'Sustainability Leadership',
+    description: 'Lead sustainable business practices and initiatives',
+    duration: '3 weeks',
+    level: 'Intermediate',
+    category: 'Sustainability',
+    order: 5,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-6',
+    title: 'Remote Team Leadership',
+    description: 'Effectively lead and manage remote and hybrid teams',
+    duration: '3 weeks',
+    level: 'Intermediate',
+    category: 'Remote',
+    order: 6,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-7',
+    title: 'Financial Leadership',
+    description: 'Understand financial metrics and make data-driven decisions',
+    duration: '4 weeks',
+    level: 'Advanced',
+    category: 'Finance',
+    order: 7,
+    source: 'sidebar'
+  },
+  {
+    id: 'sidebar-8',
+    title: 'Public Speaking & Presentation',
+    description: 'Develop confidence in public speaking and presentations',
+    duration: '2 weeks',
+    level: 'Beginner',
+    category: 'Communication',
+    order: 8,
+    source: 'sidebar'
+  }
+]
+
+interface ProgramModule {
+  id: string
+  title: string
+  description: string
+  duration: string
+  level: string
+  category: string
+  order: number
+  source?: 'recommended' | 'sidebar'
 }
 
 export default function AssessmentPage() {
@@ -245,7 +344,12 @@ export default function AssessmentPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [programModules, setProgramModules] = useState<ProgramModule[]>([])
+  const [availableModules, setAvailableModules] = useState<ProgramModule[]>([])
   const [draggedModule, setDraggedModule] = useState<string | null>(null)
+  const [dragSource, setDragSource] = useState<'program' | 'sidebar' | null>(null)
+  const [dropTarget, setDropTarget] = useState<string | null>(null)
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [aiSummary, setAiSummary] = useState<string | null>(null)
 
   const totalSteps = 4
   const progress = (currentStep / totalSteps) * 100
@@ -258,11 +362,88 @@ export default function AssessmentPage() {
         [field]: value
       }
     }))
+    
+    // Clear error when user starts typing
+    if (errors[`${section}.${field}`]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[`${section}.${field}`]
+        return newErrors
+      })
+    }
+  }
+
+  const validateStep = (step: number): boolean => {
+    const newErrors: ValidationErrors = {}
+    
+    switch (step) {
+      case 1: // Personal Information
+        if (!data.personalInfo.name.trim()) {
+          newErrors['personalInfo.name'] = ['Full name is required']
+        }
+        if (!data.personalInfo.email.trim()) {
+          newErrors['personalInfo.email'] = ['Email address is required']
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.personalInfo.email)) {
+          newErrors['personalInfo.email'] = ['Please enter a valid email address']
+        }
+        break
+        
+      case 2: // Current Leadership
+        if (!data.currentLeadership.teamSize) {
+          newErrors['currentLeadership.teamSize'] = ['Team size is required']
+        }
+        if (!data.currentLeadership.leadershipLevel) {
+          newErrors['currentLeadership.leadershipLevel'] = ['Leadership level is required']
+        }
+        if (data.currentLeadership.challenges.length === 0) {
+          newErrors['currentLeadership.challenges'] = ['Please select at least one challenge']
+        }
+        if (data.currentLeadership.strengths.length === 0) {
+          newErrors['currentLeadership.strengths'] = ['Please select at least one strength']
+        }
+        break
+        
+      case 3: // Development Goals
+        if (!data.developmentGoals.primaryGoal.trim()) {
+          newErrors['developmentGoals.primaryGoal'] = ['Primary goal is required']
+        }
+        if (!data.developmentGoals.timeFrame) {
+          newErrors['developmentGoals.timeFrame'] = ['Timeframe is required']
+        }
+        if (data.developmentGoals.specificAreas.length === 0) {
+          newErrors['developmentGoals.specificAreas'] = ['Please select at least one area to develop']
+        }
+        if (!data.developmentGoals.motivation.trim()) {
+          newErrors['developmentGoals.motivation'] = ['Motivation is required']
+        }
+        break
+        
+      case 4: // Learning Preferences
+        if (data.learningPreferences.preferredFormat.length === 0) {
+          newErrors['learningPreferences.preferredFormat'] = ['Please select at least one learning format']
+        }
+        if (!data.learningPreferences.timeAvailability) {
+          newErrors['learningPreferences.timeAvailability'] = ['Time availability is required']
+        }
+        if (!data.learningPreferences.learningStyle) {
+          newErrors['learningPreferences.learningStyle'] = ['Learning style is required']
+        }
+        break
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const getFieldError = (fieldPath: string): string | undefined => {
+    return errors[fieldPath]?.[0]
   }
 
   const handleNext = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
+    if (validateStep(currentStep)) {
+      if (currentStep < totalSteps) {
+        setCurrentStep(currentStep + 1)
+      }
     }
   }
 
@@ -272,25 +453,54 @@ export default function AssessmentPage() {
     }
   }
 
-  const handleSubmit = () => {
-    setIsSubmitted(true)
-    setIsGenerating(true)
-    
-    // Simulate AI processing time
-    setTimeout(() => {
-      const modules = generateProgramModules(data)
-      setProgramModules(modules)
-      setIsGenerating(false)
-    }, 3000)
+  const handleSubmit = async () => {
+    if (validateStep(currentStep)) {
+      setIsSubmitted(true)
+      setIsGenerating(true)
+      const totalAIDuration = aiSteps.reduce((sum, step) => sum + step.duration, 0) + 500;
+      let openAIModules = null;
+      let openAISummary = null;
+      try {
+        const res = await fetch('/api/generate-program', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ assessment: data }),
+        });
+        const result = await res.json();
+        if (result.modules && Array.isArray(result.modules)) {
+          openAIModules = result.modules;
+        }
+        if (result.summary) {
+          openAISummary = result.summary;
+        }
+      } catch (err) {
+        // Ignore, fallback to mock
+      }
+      setTimeout(() => {
+        const modules = openAIModules || generateProgramModules(data);
+        setProgramModules(modules)
+        setAiSummary(openAISummary || null);
+        // Filter out modules that are already in the program
+        const usedModuleIds = modules.map((m: ProgramModule) => m.id)
+        const filteredAdditionalModules = additionalModules.filter(
+          (m: ProgramModule) => !usedModuleIds.includes(m.id)
+        )
+        setAvailableModules(filteredAdditionalModules)
+        setIsGenerating(false)
+      }, totalAIDuration)
+    }
   }
 
   const handleGetStarted = () => {
     router.push('/pricing')
   }
 
-  const handleDragStart = (e: React.DragEvent, moduleId: string) => {
+  const handleDragStart = (e: React.DragEvent, moduleId: string, source: 'program' | 'sidebar') => {
     setDraggedModule(moduleId)
+    setDragSource(source)
+    setDropTarget(null)
     e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', moduleId)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -298,27 +508,163 @@ export default function AssessmentPage() {
     e.dataTransfer.dropEffect = 'move'
   }
 
+  const handleDragEnter = (e: React.DragEvent, moduleId: string) => {
+    e.preventDefault()
+    if (draggedModule && draggedModule !== moduleId) {
+      setDropTarget(moduleId)
+    }
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    // Only clear drop target if we're actually leaving the drop zone
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX
+    const y = e.clientY
+    
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setDropTarget(null)
+    }
+  }
+
   const handleDrop = (e: React.DragEvent, targetId: string) => {
     e.preventDefault()
-    if (!draggedModule || draggedModule === targetId) return
+    if (!draggedModule || !dragSource) return
 
+    if (dragSource === 'program') {
+      // Reordering within program
+      if (draggedModule === targetId) return
+
+      setProgramModules(prev => {
+        const modules = [...prev]
+        const draggedIndex = modules.findIndex(m => m.id === draggedModule)
+        const targetIndex = modules.findIndex(m => m.id === targetId)
+        
+        const [draggedModuleData] = modules.splice(draggedIndex, 1)
+        modules.splice(targetIndex, 0, draggedModuleData)
+        
+        // Update order
+        return modules.map((module, index) => ({
+          ...module,
+          order: index + 1
+        }))
+      })
+    } else if (dragSource === 'sidebar') {
+      // Adding from sidebar to program
+      const moduleToAdd = availableModules.find(m => m.id === draggedModule)
+      if (!moduleToAdd) return
+
+      setProgramModules(prev => {
+        const targetIndex = prev.findIndex(m => m.id === targetId)
+        const newModule = { ...moduleToAdd, order: targetIndex + 1 }
+        
+        // Insert at target position and update orders
+        const newModules = [...prev]
+        newModules.splice(targetIndex, 0, newModule)
+        
+        return newModules.map((module, index) => ({
+          ...module,
+          order: index + 1
+        }))
+      })
+
+      // Remove from available modules
+      setAvailableModules(prev => prev.filter((m: ProgramModule) => m.id !== draggedModule))
+    }
+    
+    setDraggedModule(null)
+    setDragSource(null)
+    setDropTarget(null)
+  }
+
+  const handleDropOnProgram = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!draggedModule || !dragSource) return
+
+    if (dragSource === 'sidebar') {
+      // Adding from sidebar to end of program
+      const moduleToAdd = availableModules.find(m => m.id === draggedModule)
+      if (!moduleToAdd) return
+
+      setProgramModules(prev => {
+        const newModule = { ...moduleToAdd, order: prev.length + 1 }
+        return [...prev, newModule]
+      })
+
+      // Remove from available modules
+      setAvailableModules(prev => prev.filter((m: ProgramModule) => m.id !== draggedModule))
+    }
+    
+    setDraggedModule(null)
+    setDragSource(null)
+    setDropTarget(null)
+  }
+
+  const removeModule = (moduleId: string) => {
+    const moduleToRemove = programModules.find(m => m.id === moduleId)
+    if (!moduleToRemove) return
+
+    // Remove from program
     setProgramModules(prev => {
-      const modules = [...prev]
-      const draggedIndex = modules.findIndex(m => m.id === draggedModule)
-      const targetIndex = modules.findIndex(m => m.id === targetId)
-      
-      const [draggedModuleData] = modules.splice(draggedIndex, 1)
-      modules.splice(targetIndex, 0, draggedModuleData)
-      
-      // Update order
-      return modules.map((module, index) => ({
+      const newModules = prev.filter(m => m.id !== moduleId)
+      return newModules.map((module, index) => ({
         ...module,
         order: index + 1
       }))
     })
-    
-    setDraggedModule(null)
+
+    // Add back to available modules if it was from sidebar
+    if (moduleToRemove.source === 'sidebar') {
+      setAvailableModules(prev => [...prev, { ...moduleToRemove, order: prev.length + 1 }])
+    }
   }
+
+  const DropIndicator = ({ moduleId }: { moduleId: string }) => (
+    <div className="relative">
+      <div className="absolute -top-2 left-0 right-0 h-1 bg-blue-500 rounded-full shadow-lg transform -translate-y-1/2 z-10" />
+    </div>
+  )
+
+  // --- AI Loading State ---
+  const aiSteps = [
+    { message: "Analyzing your leadership profile...", duration: 800, progress: 15 },
+    { message: "Identifying key development areas...", duration: 1200, progress: 35 },
+    { message: "Matching learning preferences...", duration: 1000, progress: 55 },
+    { message: "Creating personalized modules...", duration: 1500, progress: 75 },
+    { message: "Optimizing learning sequence...", duration: 1000, progress: 90 },
+    { message: "Finalizing your program...", duration: 500, progress: 100 }
+  ];
+  const aiThoughts = [
+    "Synthesizing leadership modules…",
+    "Optimizing learning path…",
+    "Cross-referencing best practices…",
+    "Personalizing for your goals…",
+    "Analyzing team dynamics…",
+    "Integrating latest research…"
+  ];
+  const [aiStep, setAiStep] = useState(0);
+  const [aiProgress, setAiProgress] = useState(0);
+  const [thoughtIndex, setThoughtIndex] = useState(0);
+  useEffect(() => {
+    let totalDelay = 0;
+    if (isGenerating) {
+      aiSteps.forEach((step, index) => {
+        setTimeout(() => {
+          setAiStep(index);
+          setAiProgress(step.progress);
+        }, totalDelay);
+        totalDelay += step.duration;
+      });
+      setTimeout(() => {
+        setAiStep(aiSteps.length - 1);
+        setAiProgress(100);
+      }, totalDelay + 500);
+      const interval = setInterval(() => {
+        setThoughtIndex((prev) => (prev + 1) % aiThoughts.length);
+      }, 1800);
+      return () => clearInterval(interval);
+    }
+  }, [isGenerating]);
 
   const renderPersonalInfo = () => (
     <div className="space-y-6">
@@ -330,7 +676,11 @@ export default function AssessmentPage() {
             value={data.personalInfo.name}
             onChange={(e) => updateData('personalInfo', 'name', e.target.value)}
             placeholder="Enter your full name"
+            className={getFieldError('personalInfo.name') ? 'border-red-500' : ''}
           />
+          {getFieldError('personalInfo.name') && (
+            <p className="text-sm text-red-500">{getFieldError('personalInfo.name')}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email Address *</Label>
@@ -340,7 +690,11 @@ export default function AssessmentPage() {
             value={data.personalInfo.email}
             onChange={(e) => updateData('personalInfo', 'email', e.target.value)}
             placeholder="Enter your email"
+            className={getFieldError('personalInfo.email') ? 'border-red-500' : ''}
           />
+          {getFieldError('personalInfo.email') && (
+            <p className="text-sm text-red-500">{getFieldError('personalInfo.email')}</p>
+          )}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -385,9 +739,9 @@ export default function AssessmentPage() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="teamSize">Team Size</Label>
+          <Label htmlFor="teamSize">Team Size *</Label>
           <Select value={data.currentLeadership.teamSize} onValueChange={(value) => updateData('currentLeadership', 'teamSize', value)}>
-            <SelectTrigger>
+            <SelectTrigger className={getFieldError('currentLeadership.teamSize') ? 'border-red-500' : ''}>
               <SelectValue placeholder="Select team size" />
             </SelectTrigger>
             <SelectContent>
@@ -398,11 +752,14 @@ export default function AssessmentPage() {
               <SelectItem value="100+">100+ people</SelectItem>
             </SelectContent>
           </Select>
+          {getFieldError('currentLeadership.teamSize') && (
+            <p className="text-sm text-red-500">{getFieldError('currentLeadership.teamSize')}</p>
+          )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="leadershipLevel">Leadership Level</Label>
+          <Label htmlFor="leadershipLevel">Leadership Level *</Label>
           <Select value={data.currentLeadership.leadershipLevel} onValueChange={(value) => updateData('currentLeadership', 'leadershipLevel', value)}>
-            <SelectTrigger>
+            <SelectTrigger className={getFieldError('currentLeadership.leadershipLevel') ? 'border-red-500' : ''}>
               <SelectValue placeholder="Select leadership level" />
             </SelectTrigger>
             <SelectContent>
@@ -413,12 +770,15 @@ export default function AssessmentPage() {
               <SelectItem value="c-level">C-Level</SelectItem>
             </SelectContent>
           </Select>
+          {getFieldError('currentLeadership.leadershipLevel') && (
+            <p className="text-sm text-red-500">{getFieldError('currentLeadership.leadershipLevel')}</p>
+          )}
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label>What are your biggest leadership challenges? (Select all that apply)</Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Label>What are your biggest leadership challenges? (Select all that apply) *</Label>
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${getFieldError('currentLeadership.challenges') ? 'border border-red-500 rounded-md p-3' : ''}`}>
           {challenges.map((challenge) => (
             <div key={challenge} className="flex items-center space-x-2">
               <Checkbox
@@ -435,11 +795,14 @@ export default function AssessmentPage() {
             </div>
           ))}
         </div>
+        {getFieldError('currentLeadership.challenges') && (
+          <p className="text-sm text-red-500">{getFieldError('currentLeadership.challenges')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label>What are your leadership strengths? (Select all that apply)</Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Label>What are your leadership strengths? (Select all that apply) *</Label>
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${getFieldError('currentLeadership.strengths') ? 'border border-red-500 rounded-md p-3' : ''}`}>
           {strengths.map((strength) => (
             <div key={strength} className="flex items-center space-x-2">
               <Checkbox
@@ -456,6 +819,9 @@ export default function AssessmentPage() {
             </div>
           ))}
         </div>
+        {getFieldError('currentLeadership.strengths') && (
+          <p className="text-sm text-red-500">{getFieldError('currentLeadership.strengths')}</p>
+        )}
       </div>
     </div>
   )
@@ -463,20 +829,24 @@ export default function AssessmentPage() {
   const renderDevelopmentGoals = () => (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="primaryGoal">What is your primary leadership development goal?</Label>
+        <Label htmlFor="primaryGoal">What is your primary leadership development goal? *</Label>
         <Textarea
           id="primaryGoal"
           value={data.developmentGoals.primaryGoal}
           onChange={(e) => updateData('developmentGoals', 'primaryGoal', e.target.value)}
           placeholder="Describe your main leadership development objective..."
           rows={3}
+          className={getFieldError('developmentGoals.primaryGoal') ? 'border-red-500' : ''}
         />
+        {getFieldError('developmentGoals.primaryGoal') && (
+          <p className="text-sm text-red-500">{getFieldError('developmentGoals.primaryGoal')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="timeFrame">What is your target timeframe for achieving this goal?</Label>
+        <Label htmlFor="timeFrame">What is your target timeframe for achieving this goal? *</Label>
         <Select value={data.developmentGoals.timeFrame} onValueChange={(value) => updateData('developmentGoals', 'timeFrame', value)}>
-          <SelectTrigger>
+          <SelectTrigger className={getFieldError('developmentGoals.timeFrame') ? 'border-red-500' : ''}>
             <SelectValue placeholder="Select timeframe" />
           </SelectTrigger>
           <SelectContent>
@@ -487,11 +857,14 @@ export default function AssessmentPage() {
             <SelectItem value="ongoing">Ongoing development</SelectItem>
           </SelectContent>
         </Select>
+        {getFieldError('developmentGoals.timeFrame') && (
+          <p className="text-sm text-red-500">{getFieldError('developmentGoals.timeFrame')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label>Which specific areas would you like to develop? (Select all that apply)</Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Label>Which specific areas would you like to develop? (Select all that apply) *</Label>
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${getFieldError('developmentGoals.specificAreas') ? 'border border-red-500 rounded-md p-3' : ''}`}>
           {specificAreas.map((area) => (
             <div key={area} className="flex items-center space-x-2">
               <Checkbox
@@ -508,17 +881,24 @@ export default function AssessmentPage() {
             </div>
           ))}
         </div>
+        {getFieldError('developmentGoals.specificAreas') && (
+          <p className="text-sm text-red-500">{getFieldError('developmentGoals.specificAreas')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="motivation">What motivates you to develop as a leader?</Label>
+        <Label htmlFor="motivation">What motivates you to develop as a leader? *</Label>
         <Textarea
           id="motivation"
           value={data.developmentGoals.motivation}
           onChange={(e) => updateData('developmentGoals', 'motivation', e.target.value)}
           placeholder="Share what drives your leadership development..."
           rows={3}
+          className={getFieldError('developmentGoals.motivation') ? 'border-red-500' : ''}
         />
+        {getFieldError('developmentGoals.motivation') && (
+          <p className="text-sm text-red-500">{getFieldError('developmentGoals.motivation')}</p>
+        )}
       </div>
     </div>
   )
@@ -526,8 +906,8 @@ export default function AssessmentPage() {
   const renderLearningPreferences = () => (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label>What learning formats do you prefer? (Select all that apply)</Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <Label>What learning formats do you prefer? (Select all that apply) *</Label>
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${getFieldError('learningPreferences.preferredFormat') ? 'border border-red-500 rounded-md p-3' : ''}`}>
           {learningFormats.map((format) => (
             <div key={format} className="flex items-center space-x-2">
               <Checkbox
@@ -544,12 +924,15 @@ export default function AssessmentPage() {
             </div>
           ))}
         </div>
+        {getFieldError('learningPreferences.preferredFormat') && (
+          <p className="text-sm text-red-500">{getFieldError('learningPreferences.preferredFormat')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="timeAvailability">How much time can you dedicate to learning weekly?</Label>
+        <Label htmlFor="timeAvailability">How much time can you dedicate to learning weekly? *</Label>
         <Select value={data.learningPreferences.timeAvailability} onValueChange={(value) => updateData('learningPreferences', 'timeAvailability', value)}>
-          <SelectTrigger>
+          <SelectTrigger className={getFieldError('learningPreferences.timeAvailability') ? 'border-red-500' : ''}>
             <SelectValue placeholder="Select time availability" />
           </SelectTrigger>
           <SelectContent>
@@ -559,10 +942,13 @@ export default function AssessmentPage() {
             <SelectItem value="10+hours">10+ hours</SelectItem>
           </SelectContent>
         </Select>
+        {getFieldError('learningPreferences.timeAvailability') && (
+          <p className="text-sm text-red-500">{getFieldError('learningPreferences.timeAvailability')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label>What is your preferred learning style?</Label>
+        <Label>What is your preferred learning style? *</Label>
         <RadioGroup value={data.learningPreferences.learningStyle} onValueChange={(value) => updateData('learningPreferences', 'learningStyle', value)}>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="visual" id="visual" />
@@ -581,6 +967,9 @@ export default function AssessmentPage() {
             <Label htmlFor="mixed">Mixed approach</Label>
           </div>
         </RadioGroup>
+        {getFieldError('learningPreferences.learningStyle') && (
+          <p className="text-sm text-red-500">{getFieldError('learningPreferences.learningStyle')}</p>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -597,84 +986,318 @@ export default function AssessmentPage() {
   )
 
   const renderGeneratingProgram = () => (
-    <div className="space-y-8 text-center">
-      <div className="space-y-4">
-        <Loader2 className="h-16 w-16 text-blue-600 mx-auto animate-spin" />
-        <h2 className="text-2xl font-bold">Generating ideal program</h2>
-        <p className="text-muted-foreground">
-          Our AI is analyzing your responses to create a personalized leadership development program...
-        </p>
+    <div className="relative space-y-8 text-center">
+      {/* Minimal animated code/data lines background (grayscale) */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+        {[...Array(4)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute left-0 w-full h-4 opacity-5 text-xs font-mono text-gray-400 animate-pulse"
+            style={{
+              top: `${15 + i * 14}%`,
+              animationDelay: `${i * 0.8}s`,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {`[AI] ${aiThoughts[(thoughtIndex + i) % aiThoughts.length]} // ${Math.random().toString(36).slice(2, 10)}`}
+          </div>
+        ))}
       </div>
-      
-      <div className="space-y-4">
-        <div className="flex justify-between text-sm">
-          <span>Analyzing leadership profile...</span>
-          <span>75%</span>
+
+      <div className="relative z-10 space-y-6">
+        {/* Minimal Loader Icon */}
+        <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full border border-gray-200 bg-white shadow-sm">
+            <Loader2 className="h-8 w-8 text-gray-500 animate-spin" />
+          </div>
         </div>
-        <Progress value={75} className="h-2" />
+
+        {/* AI Thought Bubble (grayscale) */}
+        <div className="flex justify-center">
+          <div className="bg-gray-50 border border-gray-200 shadow-sm rounded-full px-6 py-2 text-gray-700 text-base font-mono animate-fade-in transition-all duration-500">
+            <span className="inline-block animate-pulse">{aiThoughts[thoughtIndex]}</span>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-gray-900">Generating your program</h2>
+          <p className="text-gray-500 max-w-md mx-auto">
+            Our AI is analyzing your responses to create a personalized leadership development program.
+          </p>
+        </div>
+      </div>
+
+      {/* Minimal AI Processing Steps (grayscale) */}
+      <div className="relative z-10 space-y-6 max-w-lg mx-auto">
+        <div className="space-y-3">
+          {aiSteps.map((step, index) => (
+            <div
+              key={index}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-500 ${
+                index <= aiStep
+                  ? 'bg-gray-50 border border-gray-200'
+                  : 'bg-white border border-gray-100 opacity-60'
+              }`}
+            >
+              <div className="flex-shrink-0">
+                {index < aiStep ? (
+                  <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center animate-step-complete">
+                    <CheckCircle className="w-4 h-4 text-gray-500" />
+                  </div>
+                ) : index === aiStep ? (
+                  <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 bg-gray-100 rounded-full"></div>
+                )}
+              </div>
+              <div className="flex-1 text-left">
+                <p className={`text-sm font-medium transition-colors duration-300 ${
+                  index <= aiStep ? 'text-gray-900' : 'text-gray-400'
+                }`}>
+                  {index === aiStep ? (
+                    <span className="inline-block">
+                      {step.message}
+                      <span className="animate-pulse">|</span>
+                    </span>
+                  ) : (
+                    step.message
+                  )}
+                </p>
+                {index === aiStep && (
+                  <div className="mt-1">
+                    <div className="w-full bg-gray-200 rounded-full h-1">
+                      <div 
+                        className="bg-gray-500 h-1 rounded-full transition-all duration-300 ease-out"
+                        style={{ width: `${((aiProgress - (index > 0 ? aiSteps[index - 1].progress : 0)) / (step.progress - (index > 0 ? aiSteps[index - 1].progress : 0))) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Minimal Overall Progress Bar */}
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm font-medium text-gray-500">
+            <span>Overall Progress</span>
+            <span>{aiProgress}%</span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+            <div 
+              className="bg-gray-700 h-3 rounded-full transition-all duration-500 ease-out shadow-sm relative"
+              style={{ width: `${aiProgress}%` }}
+            ></div>
+          </div>
+        </div>
+
+        {/* Minimal fun facts based on AI step (grayscale) */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2 text-gray-700">
+            <Zap className="w-4 h-4 text-gray-400" />
+            <span className="text-sm font-medium">
+              {aiStep === 0 && "Analyzing..."}
+              {aiStep === 1 && "Processing..."}
+              {aiStep === 2 && "Matching..."}
+              {aiStep === 3 && "Creating..."}
+              {aiStep === 4 && "Optimizing..."}
+              {aiStep === 5 && "Finalizing..."}
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            {aiStep === 0 && "Our AI is examining your leadership profile across multiple dimensions to understand your unique strengths and growth areas."}
+            {aiStep === 1 && "Identifying the most critical development areas based on your current role, team size, and leadership challenges."}
+            {aiStep === 2 && "Matching your learning preferences with proven methodologies and delivery formats for maximum engagement."}
+            {aiStep === 3 && "Creating personalized learning modules tailored to your specific goals and time availability."}
+            {aiStep === 4 && "Optimizing the learning sequence to ensure progressive skill development and practical application."}
+            {aiStep === 5 && "Finalizing your program with the perfect balance of theory, practice, and real-world application."}
+          </p>
+        </div>
       </div>
     </div>
   )
 
   const renderProgramRecommendation = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center space-y-4">
-        <Award className="h-16 w-16 text-green-600 mx-auto" />
+        <Award className="h-16 w-16 text-gray-600 mx-auto" />
         <h2 className="text-2xl font-bold">Here is your recommended program</h2>
         <p className="text-muted-foreground">
           Based on your assessment, we've created a personalized leadership development program. 
-          You can reorder the modules by dragging and dropping them.
+          You can reorder modules, add more from the sidebar, or remove modules to customize your learning path.
         </p>
       </div>
+      <div className="relative max-w-2xl mx-auto">
+        <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-gray-300 via-gray-200 to-gray-100 rounded-l-lg" />
+        <div className="relative bg-white border border-gray-200 rounded-lg shadow-lg p-8 pl-10 sm:pl-12 flex flex-col gap-4">
+          <div className="flex items-center gap-3 mb-2">
+            <Sparkles className="h-7 w-7 text-gray-400" />
+            <h3 className="text-2xl font-extrabold text-gray-900">Let's get started{data.personalInfo.name ? `, ${data.personalInfo.name}` : ''}!</h3>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="font-semibold text-gray-700 text-lg">Summary of your responses</span>
+              <div className="flex-1 border-t border-gray-200" />
+            </div>
+            <div className="text-gray-700 text-lg leading-relaxed">
+              {aiSummary ? (
+                <p>{aiSummary}</p>
+              ) : (
+                <p>Our AI has analyzed your responses and created a personalized summary of your leadership needs and goals.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Program Area */}
+        <div className="lg:col-span-3 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">Your Learning Path</h3>
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {programModules.reduce((total, module) => {
+                const weeks = parseInt(module.duration.split(' ')[0])
+                return total + weeks
+              }, 0)} weeks total
+            </Badge>
+          </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Your Learning Path</h3>
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            {programModules.reduce((total, module) => {
-              const weeks = parseInt(module.duration.split(' ')[0])
-              return total + weeks
-            }, 0)} weeks total
-          </Badge>
+          <div 
+            className={`min-h-[400px] space-y-3 p-4 rounded-lg border-2 border-dashed transition-colors ${
+              draggedModule && dragSource === 'sidebar' 
+                ? 'border-blue-400 bg-blue-50' 
+                : 'border-gray-200'
+            }`}
+            onDragOver={handleDragOver}
+            onDrop={handleDropOnProgram}
+          >
+            {programModules.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <GripVertical className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <p>Drag modules here to build your program</p>
+              </div>
+            ) : (
+              <>
+                {programModules.map((module, index) => (
+                  <div key={module.id} className="relative">
+                    {/* Drop indicator above the module */}
+                    {dropTarget === module.id && draggedModule && draggedModule !== module.id && (
+                      <DropIndicator moduleId={module.id} />
+                    )}
+                    
+                    <Card 
+                      className={`cursor-move transition-all duration-200 hover:shadow-md ${
+                        draggedModule === module.id ? 'opacity-50' : ''
+                      }`}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, module.id, 'program')}
+                      onDragEnter={(e) => handleDragEnter(e, module.id)}
+                      onDragLeave={handleDragLeave}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, module.id)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <GripVertical className="h-4 w-4 text-muted-foreground" />
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-medium">{module.title}</h4>
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary">{module.level}</Badge>
+                                <Badge variant="outline" className="flex items-center gap-1">
+                                  <Clock className="h-3 w-3" />
+                                  {module.duration}
+                                </Badge>
+                                {module.source === 'sidebar' && (
+                                  <Badge variant="outline" className="text-xs bg-green-50 text-green-700 border-green-200">
+                                    Added
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-2">{module.description}</p>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-xs">{module.category}</Badge>
+                                <span className="text-xs text-muted-foreground">Module {index + 1}</span>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeModule(module.id)}
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+                
+                {/* Drop indicator at the end if dragging from sidebar */}
+                {draggedModule && dragSource === 'sidebar' && !dropTarget && (
+                  <div className="relative">
+                    <DropIndicator moduleId="end" />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
 
-        <div className="space-y-3">
-          {programModules.map((module, index) => (
-            <Card 
-              key={module.id}
-              className={`cursor-move transition-all duration-200 hover:shadow-md ${
-                draggedModule === module.id ? 'opacity-50' : ''
-              }`}
-              draggable
-              onDragStart={(e) => handleDragStart(e, module.id)}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, module.id)}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <GripVertical className="h-4 w-4 text-muted-foreground" />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{module.title}</h4>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary">{module.level}</Badge>
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {module.duration}
-                        </Badge>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{module.description}</p>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs">{module.category}</Badge>
-                      <span className="text-xs text-muted-foreground">Module {index + 1}</span>
-                    </div>
-                  </div>
+        {/* Sidebar with Additional Modules */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-4 space-y-4">
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                More Modules
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Drag additional modules into your program
+              </p>
+            </div>
+
+            <div className="space-y-3 max-h-[600px] overflow-y-auto">
+              {availableModules.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">No more modules available</p>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              ) : (
+                availableModules.map((module) => (
+                  <Card 
+                    key={module.id}
+                    className="cursor-move transition-all duration-200 hover:shadow-md"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, module.id, 'sidebar')}
+                  >
+                    <CardContent className="p-3">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium text-sm">{module.title}</h4>
+                          <Badge variant="secondary" className="text-xs">{module.level}</Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2">{module.description}</p>
+                        <div className="flex items-center justify-between">
+                          <Badge variant="outline" className="text-xs">{module.category}</Badge>
+                          <span className="text-xs text-muted-foreground">{module.duration}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -689,14 +1312,14 @@ export default function AssessmentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {isSubmitted ? (
           isGenerating ? (
-            <div className="bg-white rounded-lg shadow-xl p-8">
+            <div className="py-8">
               {renderGeneratingProgram()}
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-xl p-8">
+            <div className="py-8">
               {renderProgramRecommendation()}
             </div>
           )
@@ -718,6 +1341,13 @@ export default function AssessmentPage() {
                 <span>{Math.round(progress)}% Complete</span>
               </div>
               <Progress value={progress} className="h-2" />
+            </div>
+
+            {/* Required Fields Notice */}
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <span className="font-semibold">Note:</span> Fields marked with an asterisk (*) are required to complete the assessment.
+              </p>
             </div>
 
             {/* Step Content */}

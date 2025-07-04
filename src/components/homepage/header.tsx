@@ -31,7 +31,7 @@ export function Header() {
                 height={120}
                 className="h-8 w-8"
               />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#023D3E] rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gray-800 rounded-full animate-pulse"></div>
             </div>
             <span className="ml-2 text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
               Elevate
@@ -55,7 +55,7 @@ export function Header() {
           {/* Language Switcher and CTA */}
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
-            <Button asChild variant="default" className="bg-[#023D3E] hover:bg-[#012A2B] text-white">
+            <Button asChild variant="default" className="bg-gray-800 hover:bg-gray-900 text-white">
               <Link href="/login">{t('nav.login')}</Link>
             </Button>
           </div>

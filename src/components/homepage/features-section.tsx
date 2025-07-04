@@ -30,7 +30,7 @@ export function FeaturesSection() {
     <section id="features" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-[#023D3E]/10 text-[#023D3E] border-[#023D3E]/20">
+          <Badge variant="secondary" className="mb-4 bg-gray-800/10 text-gray-800 border-gray-800/20">
             Powerful Features
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
@@ -43,9 +43,9 @@ export function FeaturesSection() {
         
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="group border-slate-200 hover:border-[#023D3E]/30 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <Card key={index} className="group border-slate-200 hover:border-gray-800/30 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
               <CardHeader>
-                <div className="w-14 h-14 bg-[#023D3E] rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                  <div className="w-14 h-14 bg-gray-800 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <feature.icon className="h-7 w-7 text-white" />
                 </div>
                 <CardTitle className="text-xl text-slate-900">{feature.title}</CardTitle>

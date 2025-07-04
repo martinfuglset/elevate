@@ -37,7 +37,7 @@ export default function PricingPage() {
       ],
       cta: "Start Now",
       popular: true,
-      checkColor: "text-[#023D3E]"
+      checkColor: "text-gray-800]"
     },
     {
       name: "Enterprise",
@@ -53,7 +53,7 @@ export default function PricingPage() {
       ],
       cta: "Contact Sales",
       popular: false,
-      checkColor: "text-[#023D3E]",
+      checkColor: "text-gray-800]",
       outline: true
     }
   ]
@@ -62,7 +62,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-[#023D3E]/10 text-[#023D3E] border-[#023D3E]/20">
+          <Badge variant="secondary" className="mb-4 bg-gray-800]/10 text-gray-800] border-gray-800]/20">
             Pricing
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
@@ -79,13 +79,13 @@ export default function PricingPage() {
               key={index} 
               className={`group relative ${
                 plan.popular 
-                  ? 'border-2 border-[#023D3E] bg-[#023D3E]/5 hover:shadow-2xl transform hover:-translate-y-2' 
-                  : 'border-slate-200 hover:border-[#023D3E]/30 hover:shadow-xl'
+                  ? 'border-2 border-gray-800] bg-gray-800]/5 hover:shadow-2xl transform hover:-translate-y-2' 
+                  : 'border-slate-200 hover:border-gray-800]/30 hover:shadow-xl'
               } transition-all duration-300`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-[#023D3E] text-white border-0">
+                  <Badge className="bg-gray-800] text-white border-0">
                     Most Popular
                   </Badge>
                 </div>
@@ -96,7 +96,7 @@ export default function PricingPage() {
                 <div className="mt-4">
                   <span className={`text-4xl font-bold ${
                     plan.popular 
-                      ? 'bg-gradient-to-r from-[#023D3E] to-[#012A2B] bg-clip-text text-transparent' 
+                      ? 'bg-gradient-to-r from-[gray-800] to-[gray-900] bg-clip-text text-transparent' 
                       : 'text-slate-900'
                   }`}>
                     {plan.price}
@@ -117,9 +117,9 @@ export default function PricingPage() {
                   asChild 
                   className={`w-full ${
                     plan.outline 
-                      ? 'border-2 hover:bg-[#023D3E]/5' 
+                      ? 'border-2 hover:bg-gray-800]/5' 
                       : plan.popular 
-                        ? 'bg-[#023D3E] hover:bg-[#012A2B] text-white'
+                        ? 'bg-gray-800] hover:bg-gray-900] text-white'
                         : 'bg-slate-800 hover:bg-slate-900 text-white'
                   }`}
                 >

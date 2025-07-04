@@ -253,9 +253,40 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
   const [isGenerating, setIsGenerating] = useState(false)
   const [programModules, setProgramModules] = useState<ProgramModule[]>([])
   const [draggedModule, setDraggedModule] = useState<string | null>(null)
+  const [aiStep, setAiStep] = useState(0)
+  const [aiProgress, setAiProgress] = useState(0)
 
   const totalSteps = 4
   const progress = (currentStep / totalSteps) * 100
+
+  // AI processing steps with realistic timing
+  const aiSteps = [
+    { message: "Analyzing your leadership profile...", duration: 800, progress: 15 },
+    { message: "Identifying key development areas...", duration: 1200, progress: 35 },
+    { message: "Matching learning preferences...", duration: 1000, progress: 55 },
+    { message: "Creating personalized modules...", duration: 1500, progress: 75 },
+    { message: "Optimizing learning sequence...", duration: 1000, progress: 90 },
+    { message: "Finalizing your program...", duration: 500, progress: 100 }
+  ]
+
+  // Add AI thought bubbles and code lines
+  const aiThoughts = [
+    "Synthesizing leadership modules…",
+    "Optimizing learning path…",
+    "Cross-referencing best practices…",
+    "Personalizing for your goals…",
+    "Analyzing team dynamics…",
+    "Integrating latest research…"
+  ];
+  const [thoughtIndex, setThoughtIndex] = useState(0);
+  useEffect(() => {
+    if (isGenerating) {
+      const interval = setInterval(() => {
+        setThoughtIndex((prev) => (prev + 1) % aiThoughts.length);
+      }, 1800);
+      return () => clearInterval(interval);
+    }
+  }, [isGenerating]);
 
   const updateData = (section: keyof AssessmentData, field: string, value: any) => {
     setData(prev => ({
@@ -282,14 +313,26 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
   const handleSubmit = () => {
     setIsSubmitted(true)
     setIsGenerating(true)
+    setAiStep(0)
+    setAiProgress(0)
     
-    // Simulate AI processing time
+    // Simulate AI processing with multiple steps
+    let totalDelay = 0
+    aiSteps.forEach((step, index) => {
+      setTimeout(() => {
+        setAiStep(index)
+        setAiProgress(step.progress)
+      }, totalDelay)
+      totalDelay += step.duration
+    })
+    
+    // Complete the process
     setTimeout(() => {
       const modules = generateProgramModules(data)
       setProgramModules(modules)
       setIsGenerating(false)
       if (onComplete) onComplete(data)
-    }, 3000)
+    }, totalDelay + 500)
   }
 
   const handleClose = () => {
@@ -298,6 +341,8 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
     setIsSubmitted(false)
     setIsGenerating(false)
     setProgramModules([])
+    setAiStep(0)
+    setAiProgress(0)
     onClose()
   }
 
@@ -615,21 +660,153 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
   )
 
   const renderGeneratingProgram = () => (
-    <div className="space-y-8 text-center">
-      <div className="space-y-4">
-        <Loader2 className="h-16 w-16 text-blue-600 mx-auto animate-spin" />
-        <h2 className="text-2xl font-bold">Generating ideal program</h2>
-        <p className="text-muted-foreground">
-          Our AI is analyzing your responses to create a personalized leadership development program...
-        </p>
+    <div className="relative space-y-8 text-center">
+      <div className="text-4xl font-extrabold text-red-600 mb-4">NEW AI LOADING SCREEN</div>
+      {/* Animated code/data lines background */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className={`absolute left-0 w-full h-4 opacity-10 text-xs font-mono text-blue-900 animate-pulse`}
+            style={{
+              top: `${10 + i * 12}%`,
+              animationDelay: `${i * 0.7}s`,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {`[AI] ${aiThoughts[(thoughtIndex + i) % aiThoughts.length]} // ${Math.random()
+              .toString(36)
+              .slice(2, 10)}`}
+          </div>
+        ))}
       </div>
-      
-      <div className="space-y-4">
-        <div className="flex justify-between text-sm">
-          <span>Analyzing leadership profile...</span>
-          <span>75%</span>
+
+      <div className="relative z-10 space-y-6">
+        {/* Animated AI Brain */}
+        <div className="relative mx-auto w-28 h-28 flex items-center justify-center">
+          {/* Outer glow ring */}
+          <div className="absolute inset-0 rounded-full border-4 border-blue-200 animate-pulse-glow"></div>
+          {/* Central brain icon with pulsing effect */}
+          <div className="absolute inset-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center animate-brain-pulse shadow-xl">
+            <div className="text-white text-3xl animate-bounce">🧠</div>
+          </div>
+          {/* Floating orbs */}
+          <div className="absolute -top-3 left-1/2 w-4 h-4 bg-yellow-400 rounded-full animate-particle-float" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute -bottom-3 right-1/2 w-3 h-3 bg-green-400 rounded-full animate-particle-float" style={{ animationDelay: '1.2s' }}></div>
+          <div className="absolute top-1/2 -right-4 w-3 h-3 bg-purple-400 rounded-full animate-particle-float" style={{ animationDelay: '1.7s' }}></div>
+          <div className="absolute -top-4 left-1/3 w-2.5 h-2.5 bg-pink-400 rounded-full animate-particle-float" style={{ animationDelay: '2.1s' }}></div>
+          <div className="absolute bottom-1/2 -left-3 w-2 h-2 bg-cyan-400 rounded-full animate-particle-float" style={{ animationDelay: '2.6s' }}></div>
         </div>
-        <Progress value={75} className="h-2" />
+
+        {/* AI Thought Bubble */}
+        <div className="flex justify-center">
+          <div className="bg-white/80 border border-blue-100 shadow-md rounded-full px-6 py-2 text-blue-700 text-base font-mono animate-fade-in transition-all duration-500">
+            <span className="inline-block animate-pulse">{aiThoughts[thoughtIndex]}</span>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            AI is generating your program
+          </h2>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            Our advanced AI is analyzing your unique leadership profile to create a perfectly tailored development journey.
+          </p>
+        </div>
+      </div>
+
+      {/* Dynamic AI Processing Steps */}
+      <div className="relative z-10 space-y-6 max-w-lg mx-auto">
+        <div className="space-y-4">
+          {aiSteps.map((step, index) => (
+            <div
+              key={index}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-500 ${
+                index <= aiStep
+                  ? 'bg-blue-50 border border-blue-200'
+                  : 'bg-gray-50 border border-gray-200 opacity-50'
+              }`}
+            >
+              <div className="flex-shrink-0">
+                {index < aiStep ? (
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center animate-step-complete">
+                    <CheckCircle className="w-4 h-4 text-white" />
+                  </div>
+                ) : index === aiStep ? (
+                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 text-white animate-spin" />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
+                )}
+              </div>
+              <div className="flex-1 text-left">
+                <p className={`text-sm font-medium transition-colors duration-300 ${
+                  index <= aiStep ? 'text-gray-900' : 'text-gray-500'
+                }`}>
+                  {index === aiStep ? (
+                    <span className="inline-block">
+                      {step.message}
+                      <span className="animate-pulse">|</span>
+                    </span>
+                  ) : (
+                    step.message
+                  )}
+                </p>
+                {index === aiStep && (
+                  <div className="mt-1">
+                    <div className="w-full bg-gray-200 rounded-full h-1">
+                      <div 
+                        className="bg-blue-500 h-1 rounded-full transition-all duration-300 ease-out"
+                        style={{ width: `${((aiProgress - (index > 0 ? aiSteps[index - 1].progress : 0)) / (step.progress - (index > 0 ? aiSteps[index - 1].progress : 0))) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Overall Progress */}
+        <div className="space-y-3">
+          <div className="flex justify-between text-sm font-medium">
+            <span>Overall Progress</span>
+            <span>{aiProgress}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div 
+              className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out shadow-lg relative"
+              style={{ width: `${aiProgress}%` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic fun facts based on AI step */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2 text-blue-700">
+            <Zap className="w-4 h-4" />
+            <span className="text-sm font-medium">
+              {aiStep === 0 && "Analyzing..."}
+              {aiStep === 1 && "Processing..."}
+              {aiStep === 2 && "Matching..."}
+              {aiStep === 3 && "Creating..."}
+              {aiStep === 4 && "Optimizing..."}
+              {aiStep === 5 && "Finalizing..."}
+            </span>
+          </div>
+          <p className="text-sm text-blue-600 mt-1">
+            {aiStep === 0 && "Our AI is examining your leadership profile across multiple dimensions to understand your unique strengths and growth areas."}
+            {aiStep === 1 && "Identifying the most critical development areas based on your current role, team size, and leadership challenges."}
+            {aiStep === 2 && "Matching your learning preferences with proven methodologies and delivery formats for maximum engagement."}
+            {aiStep === 3 && "Creating personalized learning modules tailored to your specific goals and time availability."}
+            {aiStep === 4 && "Optimizing the learning sequence to ensure progressive skill development and practical application."}
+            {aiStep === 5 && "Finalizing your program with the perfect balance of theory, practice, and real-world application."}
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -637,7 +814,7 @@ export function AssessmentModal({ isOpen, onClose, onComplete }: AssessmentModal
   const renderProgramRecommendation = () => (
     <div className="space-y-6">
       <div className="text-center space-y-4">
-        <Award className="h-16 w-16 text-green-600 mx-auto" />
+        <Award className="h-16 w-16 text-gray-600 mx-auto" />
         <h2 className="text-2xl font-bold">Here is your recommended program</h2>
         <p className="text-muted-foreground">
           Based on your assessment, we've created a personalized leadership development program. 

@@ -27,7 +27,7 @@ export function TestimonialsSection() {
     <section id="testimonials" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-[#023D3E]/10 text-[#023D3E] border-[#023D3E]/20">
+          <Badge variant="secondary" className="mb-4 bg-gray-800]/10 text-gray-800] border-gray-800]/20">
             Testimonials
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
@@ -41,7 +41,7 @@ export function TestimonialsSection() {
               <CardContent className="pt-6">
                 <div className="flex mb-4">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="h-4 w-4 text-amber-400 fill-current" />
+                    <Star key={i} className="h-4 w-4 text-gray-400 fill-current" />
                   ))}
                 </div>
                 <Quote className="h-8 w-8 text-slate-300 mb-4" />
@@ -49,7 +49,7 @@ export function TestimonialsSection() {
                   "{testimonial.quote}"
                 </p>
                 <div className="flex items-center">
-                  <div className="w-10 h-10 bg-[#023D3E] rounded-full mr-3"></div>
+                  <div className="w-10 h-10 bg-gray-800] rounded-full mr-3"></div>
                   <div>
                     <div className="font-semibold text-slate-900">{testimonial.author}</div>
                     <div className="text-sm text-slate-600">{testimonial.role}</div>

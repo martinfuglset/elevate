@@ -11,7 +11,7 @@ export function CTASection() {
   
   return (
     <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-[#023D3E]/20 to-[#012A2B]/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-800/20 to-gray-900/20"></div>
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <Badge variant="secondary" className="mb-6 bg-white/10 text-white border-white/20">
           {t('cta.badge')}
@@ -23,7 +23,7 @@ export function CTASection() {
           {t('cta.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" className="bg-[#023D3E] hover:bg-[#012A2B] text-white px-8 py-3 text-lg">
+          <Button asChild size="lg" className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-3 text-lg">
             <Link href="/login">{t('cta.button')}</Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 px-8 py-3 text-lg">
