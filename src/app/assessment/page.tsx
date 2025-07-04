@@ -1123,35 +1123,32 @@ export default function AssessmentPage() {
 
   const renderProgramRecommendation = () => (
     <div className="space-y-8">
-      <div className="text-center space-y-4">
+      {/* Minimal AI summary section */}
+      <section className="w-full bg-purple-50 border border-purple-300 rounded-xl py-8 mb-10">
+        <div className="max-w-2xl mx-auto px-4 flex flex-col items-center text-center gap-2">
+          <Sparkles className="h-7 w-7 text-purple-500 mb-1" />
+          <h3 className="text-xl text-purple-800 mb-1 font-normal">Let's get started{data.personalInfo.name ? `, ${data.personalInfo.name}` : ''}!</h3>
+          <div className="flex items-center gap-2 justify-center mb-1">
+            <span className="text-purple-700">Summary of your responses</span>
+            <div className="flex-1 border-t border-purple-200 max-w-xs" />
+          </div>
+          <div className="text-purple-900 text-base leading-relaxed">
+            {aiSummary ? (
+              <p>{aiSummary}</p>
+            ) : (
+              <p>Our AI has analyzed your responses and created a personalized summary of your leadership needs and goals.</p>
+            )}
+          </div>
+        </div>
+      </section>
+      {/* Main heading and program card */}
+      <div className="text-center space-y-4 mt-12 mb-8">
         <Award className="h-16 w-16 text-gray-600 mx-auto" />
         <h2 className="text-2xl font-bold">Here is your recommended program</h2>
         <p className="text-muted-foreground">
           Based on your assessment, we've created a personalized leadership development program. 
           You can reorder modules, add more from the sidebar, or remove modules to customize your learning path.
         </p>
-      </div>
-      <div className="relative max-w-2xl mx-auto">
-        <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-gray-300 via-gray-200 to-gray-100 rounded-l-lg" />
-        <div className="relative bg-white border border-gray-200 rounded-lg shadow-lg p-8 pl-10 sm:pl-12 flex flex-col gap-4">
-          <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="h-7 w-7 text-gray-400" />
-            <h3 className="text-2xl font-extrabold text-gray-900">Let's get started{data.personalInfo.name ? `, ${data.personalInfo.name}` : ''}!</h3>
-          </div>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-700 text-lg">Summary of your responses</span>
-              <div className="flex-1 border-t border-gray-200" />
-            </div>
-            <div className="text-gray-700 text-lg leading-relaxed">
-              {aiSummary ? (
-                <p>{aiSummary}</p>
-              ) : (
-                <p>Our AI has analyzed your responses and created a personalized summary of your leadership needs and goals.</p>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Program Area */}
