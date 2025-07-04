@@ -350,6 +350,7 @@ export default function AssessmentPage() {
   const [dropTarget, setDropTarget] = useState<string | null>(null)
   const [errors, setErrors] = useState<ValidationErrors>({})
   const [aiSummary, setAiSummary] = useState<string | null>(null)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   const totalSteps = 4
   const progress = (currentStep / totalSteps) * 100
@@ -457,6 +458,7 @@ export default function AssessmentPage() {
     if (validateStep(currentStep)) {
       setIsSubmitted(true)
       setIsGenerating(true)
+      setApiError(null) // Clear any previous errors
       const totalAIDuration = aiSteps.reduce((sum, step) => sum + step.duration, 0) + 500;
       let openAIModules = null;
       let openAISummary = null;
@@ -466,15 +468,25 @@ export default function AssessmentPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ assessment: data }),
         });
-        const result = await res.json();
-        if (result.modules && Array.isArray(result.modules)) {
-          openAIModules = result.modules;
-        }
-        if (result.summary) {
-          openAISummary = result.summary;
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error('API Error:', errorData);
+          setApiError(errorData.error || `HTTP ${res.status}: ${res.statusText}`);
+          // Continue with fallback data
+        } else {
+          const result = await res.json();
+          if (result.modules && Array.isArray(result.modules)) {
+            openAIModules = result.modules;
+          }
+          if (result.summary) {
+            openAISummary = result.summary;
+          }
         }
       } catch (err) {
-        // Ignore, fallback to mock
+        console.error('Network error:', err);
+        setApiError('Network error: Unable to connect to AI service');
+        // Continue with fallback data
       }
       setTimeout(() => {
         const modules = openAIModules || generateProgramModules(data);
@@ -1137,6 +1149,13 @@ export default function AssessmentPage() {
               <p>{aiSummary}</p>
             ) : (
               <p>Our AI has analyzed your responses and created a personalized summary of your leadership needs and goals.</p>
+            )}
+            {apiError && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-700 text-sm">
+                  <strong>Note:</strong> AI summary generation failed ({apiError}). Using fallback content.
+                </p>
+              </div>
             )}
           </div>
         </div>
