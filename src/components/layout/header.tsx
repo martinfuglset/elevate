@@ -55,14 +55,7 @@ export function Header({ className }: { className?: string }) {
               href="#"
               className="flex items-center gap-2 text-lg font-medium"
             >
-              <Image
-                src="/logo (1).svg"
-                alt="Elevate Logo"
-                width={800}
-                height={800}
-                className="h-12 w-12 lg:h-16 lg:w-16"
-              />
-              <span className="sr-only">Elevate</span>
+              <span className="text-lg font-medium text-gray-900">ELEVATE</span>
             </Link>
             {mainNavItems.map((item) => (
                <Link

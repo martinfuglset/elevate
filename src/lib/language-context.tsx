@@ -28,20 +28,20 @@ const translations = {
     'nav.testimonials': 'Testimonials',
     
     // Hero Section
-    'hero.title': 'Transform Your Business with AI-Powered Solutions',
-    'hero.subtitle': 'Streamline operations, boost productivity, and drive growth with our comprehensive SaaS platform designed for modern businesses.',
-    'hero.cta.primary': 'Get Started Free',
+    'hero.title': 'Develop Your Leadership Talent with Precision',
+    'hero.subtitle': 'Empower the leaders in your organization to reach their full potential with our executive development platform. Transform your company from the top down.',
+    'hero.cta.primary': 'Start Developing Leaders',
     'hero.cta.secondary': 'Watch Demo',
     
     // Features Section
-    'features.title': 'Everything you need to succeed',
-    'features.subtitle': 'Powerful features designed to help your business grow and scale efficiently.',
-    'features.ai.title': 'AI-Powered Assessments',
-    'features.ai.description': 'Get personalized insights into your leadership style with our advanced AI that analyzes your strengths and growth areas.',
-    'features.results.title': 'Proven Results',
-    'features.results.description': 'Track your progress with data-driven insights and see measurable improvements in your leadership effectiveness.',
-    'features.coaching.title': 'Expert Coaching',
-    'features.coaching.description': 'Connect with certified leadership coaches and join a community of aspiring leaders for peer learning.',
+    'features.title': 'Everything you need to build exceptional leaders',
+    'features.subtitle': 'Comprehensive tools designed to help executives develop and nurture leadership talent throughout their organization.',
+    'features.ai.title': 'AI-Powered Leadership Insights',
+    'features.ai.description': 'Get deep insights into each leader\'s strengths, development areas, and potential with our advanced AI assessment system.',
+    'features.results.title': 'Measurable Development',
+    'features.results.description': 'Track leadership growth across your organization with data-driven insights and proven development methodologies.',
+    'features.coaching.title': 'Executive Development Tools',
+    'features.coaching.description': 'Access proven frameworks, coaching resources, and development plans tailored for each leader in your organization.',
     
     // Stats Section
     'stats.title': 'Trusted by businesses worldwide',
@@ -65,7 +65,7 @@ const translations = {
     
     // Footer
     'footer.copyright': '© 2024 Elevate. All rights reserved.',
-    'footer.description': 'The leading AI-powered platform for leadership development. We help leaders reach their full potential through personal coaching and proven methodologies.',
+    'footer.description': 'The leading AI-powered platform for executive leadership development. We help executives develop exceptional leadership talent throughout their organization through proven methodologies and data-driven insights.',
     'footer.product.title': 'Product',
     'footer.product.features': 'Features',
     'footer.product.pricing': 'Pricing',
@@ -94,20 +94,20 @@ const translations = {
     'nav.testimonials': 'Anmeldelser',
     
     // Hero Section
-    'hero.title': 'Transformer bedriften din med AI-drevne løsninger',
-    'hero.subtitle': 'Strømlinjeform operasjoner, øk produktiviteten og driv vekst med vår omfattende SaaS-plattform designet for moderne bedrifter.',
-    'hero.cta.primary': 'Kom i gang gratis',
+    'hero.title': 'Utvikle ditt ledertalent med presisjon',
+    'hero.subtitle': 'Støtt lederne i organisasjonen din til å nå sitt fulle potensial med vår lederutviklingsplattform. Transformer selskapet ditt fra toppen og ned.',
+    'hero.cta.primary': 'Start å utvikle ledere',
     'hero.cta.secondary': 'Se demo',
     
     // Features Section
-    'features.title': 'Alt du trenger for å lykkes',
-    'features.subtitle': 'Kraftfulle funksjoner designet for å hjelpe bedriften din å vokse og skalere effektivt.',
-    'features.ai.title': 'AI-drevne vurderinger',
-    'features.ai.description': 'Få personlige innsikter i din lederstil med vår avanserte AI som analyserer dine styrker og utviklingsområder.',
-    'features.results.title': 'Beviste resultater',
-    'features.results.description': 'Spor fremgangen din med datadrevne innsikter og se målbare forbedringer i din ledereffektivitet.',
-    'features.coaching.title': 'Ekspert coaching',
-    'features.coaching.description': 'Koble deg til sertifiserte ledercoacher og bli med i et samfunn av aspirerende ledere for kollegial læring.',
+    'features.title': 'Alt du trenger for å bygge eksepsjonelle ledere',
+    'features.subtitle': 'Omfattende verktøy designet for å hjelpe ledere å utvikle og fostre ledertalent gjennom hele organisasjonen.',
+    'features.ai.title': 'AI-drevne lederinnsikter',
+    'features.ai.description': 'Få dype innsikter i hver leders styrker, utviklingsområder og potensial med vårt avanserte AI-vurderingssystem.',
+    'features.results.title': 'Målbare utvikling',
+    'features.results.description': 'Spor lederutvikling på tvers av organisasjonen din med datadrevne innsikter og beviste utviklingsmetodologier.',
+    'features.coaching.title': 'Lederutviklingsverktøy',
+    'features.coaching.description': 'Få tilgang til beviste rammeverk, coaching-ressurser og utviklingsplaner tilpasset hver leder i organisasjonen din.',
     
     // Stats Section
     'stats.title': 'Betrodd av bedrifter verden over',
@@ -131,7 +131,7 @@ const translations = {
     
     // Footer
     'footer.copyright': '© 2024 Elevate. Alle rettigheter forbeholdt.',
-    'footer.description': 'Den ledende AI-drevne plattformen for lederutvikling. Vi hjelper ledere å nå sitt fulle potensial gjennom personlig coaching og beviste metodologier.',
+    'footer.description': 'Den ledende AI-drevne plattformen for lederutvikling. Vi hjelper ledere å utvikle eksepsjonelt ledertalent gjennom hele organisasjonen gjennom beviste metodologier og datadrevne innsikter.',
     'footer.product.title': 'Produkt',
     'footer.product.features': 'Funksjoner',
     'footer.product.pricing': 'Prising',

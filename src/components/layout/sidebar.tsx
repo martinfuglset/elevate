@@ -43,8 +43,7 @@ export function Sidebar() {
       <div className="hidden border-r bg-muted/40 md:flex md:flex-col md:w-64">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <div className="flex items-center gap-2">
-            <CircleDot className="h-5 w-5" />
-            Elevate
+            <span className="text-lg font-medium text-gray-900">ELEVATE</span>
           </div>
           <div className="ml-auto">
             <Button
@@ -90,9 +89,8 @@ export function Sidebar() {
             "flex items-center gap-2 transition-all duration-300 overflow-hidden",
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
           )}>
-            <CircleDot className="h-5 w-5 shrink-0" />
-            <span>
-              Elevate
+            <span className="text-lg font-medium text-gray-900">
+              ELEVATE
             </span>
           </Link>
           <div className={cn(

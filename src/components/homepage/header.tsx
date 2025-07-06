@@ -13,28 +13,17 @@ export function Header() {
   const navigationItems = [
     { href: "#features", label: t('nav.features') },
     { href: "#pricing", label: t('nav.pricing') },
-    { href: "#about", label: t('nav.about') },
     { href: "#testimonials", label: t('nav.testimonials') }
   ]
 
   return (
-    <header className="border-b border-slate-200/50 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="relative">
-              <Image 
-                src="/logo (1).svg" 
-                alt="Elevate Logo" 
-                width={120} 
-                height={120}
-                className="h-8 w-8"
-              />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gray-800 rounded-full animate-pulse"></div>
-            </div>
-            <span className="ml-2 text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-              Elevate
+            <span className="text-xl font-medium text-gray-900">
+              ELEVATE
             </span>
           </div>
 
@@ -44,7 +33,7 @@ export function Header() {
               <Link 
                 key={item.href}
                 href={item.href} 
-                className="text-slate-600 hover:text-slate-900 transition-colors font-medium"
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium link-underline"
                 onClick={(e) => handleAnchorClick(item.href, e)}
               >
                 {item.label}
@@ -55,7 +44,7 @@ export function Header() {
           {/* Language Switcher and CTA */}
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
-            <Button asChild variant="default" className="bg-gray-800 hover:bg-gray-900 text-white">
+            <Button asChild variant="default" size="sm">
               <Link href="/login">{t('nav.login')}</Link>
             </Button>
           </div>

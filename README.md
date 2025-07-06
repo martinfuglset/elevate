@@ -134,4 +134,48 @@ Internal improvements are welcome—open a pull request within this private repo
 
 ## 📄 License & Usage
 
-This codebase is **proprietary and confidential**. You may use, modify, and deploy it for projects undertaken by your organisation and its clients. **Redistribution or public disclosure of any part of the source code is prohibited without explicit written permission.** 
+This codebase is **proprietary and confidential**. You may use, modify, and deploy it for projects undertaken by your organisation and its clients. **Redistribution or public disclosure of any part of the source code is prohibited without explicit written permission.**
+
+## Enhanced Drag and Drop Functionality
+
+The assessment program builder features an advanced drag and drop system with the following improvements:
+
+### Visual Enhancements
+- **Custom Drag Preview**: Shows module details while dragging
+- **Enhanced Drop Indicators**: Animated indicators showing drop zones
+- **Smooth Animations**: Insertion and removal animations for better UX
+- **Visual Feedback**: Cards lift and change appearance during drag operations
+- **Loading States**: Shimmer effects during drag operations
+
+### Accessibility Features
+- **Keyboard Navigation**: Full keyboard support with Tab + Enter
+- **ARIA Labels**: Screen reader friendly descriptions
+- **Focus Management**: Proper focus states and indicators
+- **Role Attributes**: Semantic HTML roles for better accessibility
+
+### Mobile Support
+- **Touch Optimized**: Enhanced touch feedback for mobile devices
+- **Responsive Design**: Adapts to different screen sizes
+- **Touch Gestures**: Optimized for touch interactions
+
+### Technical Improvements
+- **Performance**: Optimized animations and transitions
+- **Error Handling**: Robust error handling for edge cases
+- **State Management**: Improved state management for drag operations
+- **Cross-browser**: Consistent behavior across different browsers
+
+### Usage
+1. **Drag from Library**: Click and drag modules from the library to your program
+2. **Reorder Program**: Drag modules within your program to reorder them
+3. **Keyboard Navigation**: Use Tab to navigate and Enter to add/remove modules
+4. **Remove Modules**: Click the trash icon or use keyboard shortcuts
+
+### Features
+- ✅ Custom drag preview with module details
+- ✅ Animated drop indicators
+- ✅ Smooth insertion/removal animations
+- ✅ Keyboard navigation support
+- ✅ Mobile touch optimization
+- ✅ Accessibility compliance
+- ✅ Visual feedback during operations
+- ✅ Error handling and validation 

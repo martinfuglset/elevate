@@ -4,7 +4,6 @@ import {
   Header,
   HeroSection,
   FeaturesSection,
-  StatsSection,
   TestimonialsSection,
   PricingSection,
   Footer
@@ -12,13 +11,12 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white font-sans overflow-hidden">
+    <div className="min-h-screen bg-white font-sans">
       <Header />
       
-      <main>
+      <main className="pt-16">
         <HeroSection />
         <FeaturesSection />
-        <StatsSection />
         <TestimonialsSection />
         <PricingSection />
       </main>

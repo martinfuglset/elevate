@@ -13,12 +13,11 @@ export function Footer() {
   const productLinks = [
     { href: "#features", label: t('footer.product.features') },
     { href: "#pricing", label: t('footer.product.pricing') },
-    { href: "#demo", label: t('footer.product.integrations') },
-    { href: "#about", label: t('footer.product.api') }
+    { href: "#testimonials", label: t('footer.product.testimonials') }
   ]
 
   const companyLinks = [
-    { href: "#about", label: t('footer.company.about') },
+    { href: "#", label: t('footer.company.about') },
     { href: "#", label: t('footer.company.careers') },
     { href: "#", label: t('footer.company.blog') },
     { href: "#", label: t('footer.company.contact') }
@@ -31,24 +30,17 @@ export function Footer() {
   ]
 
   return (
-    <footer id="demo" className="bg-white border-t border-slate-200">
+    <footer className="bg-white border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-6">
-              <Image 
-                src="/logo (1).svg" 
-                alt="Elevate Logo" 
-                width={40} 
-                height={40}
-                className="h-8 w-8"
-              />
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                Elevate
+              <span className="text-xl font-medium text-gray-900">
+                ELEVATE
               </span>
             </div>
-            <p className="text-slate-600 mb-6 max-w-md">
+            <p className="text-gray-600 mb-6 max-w-md leading-relaxed">
               {t('footer.description')}
             </p>
             <div className="flex space-x-4">
@@ -58,13 +50,13 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">{t('footer.product.title')}</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('footer.product.title')}</h3>
+            <ul className="space-y-3">
               {productLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-gray-600 hover:text-gray-900 transition-colors font-medium link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -76,13 +68,13 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">{t('footer.company.title')}</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('footer.company.title')}</h3>
+            <ul className="space-y-3">
               {companyLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-slate-600 hover:text-slate-900 transition-colors"
+                    className="text-gray-600 hover:text-gray-900 transition-colors font-medium link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -97,7 +89,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-slate-600 text-sm">
+          <p className="text-gray-600 text-sm font-medium">
             {t('footer.copyright')}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
@@ -105,7 +97,7 @@ export function Footer() {
               <Link 
                 key={link.label}
                 href={link.href} 
-                className="text-slate-600 hover:text-slate-900 text-sm transition-colors"
+                className="text-gray-600 hover:text-gray-900 text-sm transition-colors font-medium link-underline"
                 onClick={(e) => handleAnchorClick(link.href, e)}
               >
                 {link.label}
