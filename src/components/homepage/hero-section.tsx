@@ -55,7 +55,7 @@ export function HeroSection() {
             <div className="flex mb-12 justify-center">
               <Button asChild size="lg" className="rounded-xl bg-white text-black">
                 <Link href="/assessment">
-                  Assess Your Leadership Talent
+                  Take need analysis
                   <ArrowRight className="ml-2 h-5 w-5 text-black" />
                 </Link>
               </Button>

@@ -17,6 +17,16 @@ const mockAssessmentData = {
     departments: ['Sales', 'Engineering/Technology', 'Human Resources'],
     assessmentFocus: ['Leadership Development', 'Succession Planning', 'Strategic Alignment']
   },
+  levels: [
+    {
+      id: 'level1',
+      name: 'Senior Leader',
+      description: 'Experienced leaders responsible for strategic direction.',
+      competencies: ['Strategic Thinking', 'Change Management'],
+      developmentNeeds: ['Digital Transformation'],
+      estimatedCount: '2'
+    }
+  ],
   leaders: [
     {
       id: 'l1',
@@ -73,7 +83,7 @@ const mockAssessmentData = {
     strategicAlignment: 'Need better alignment between leadership capabilities and organizational strategic goals'
   },
   developmentPlan: {
-    priorityLeaders: ['l1', 'l3'],
+    priorityLevels: ['l1', 'l3'],
     timeline: '6-months',
     budget: '25k-50k',
     successMetrics: 'Improved team performance, better retention, successful promotions'

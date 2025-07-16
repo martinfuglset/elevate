@@ -39,11 +39,11 @@ import {
 } from '@dnd-kit/sortable';
 import {CSS} from '@dnd-kit/utilities';
 
-import { ProgramModule, GeneratedProgram, Leader } from '@/types/assessment';
+import { ProgramModule, GeneratedProgram } from '@/types/assessment';
 
 interface DevelopmentProgramProps {
   program: GeneratedProgram;
-  leaders?: Leader[];
+  leaders?: any[];
   summary?: string | null;
   onStartOver: () => void;
 }

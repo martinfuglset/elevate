@@ -288,7 +288,12 @@ export default function AssessmentPageComponent({
 
   const generateProgram = (assessmentData: AssessmentData): GeneratedProgram => {
     // Mock program generation logic
-    const totalLeaders = assessmentData.levels.reduce((sum, lvl) => sum + (lvl.estimatedCount || 0), 0);
+    const totalLeaders = assessmentData.levels.reduce((sum, lvl) => {
+      const count = typeof lvl.estimatedCount === 'string'
+        ? parseInt(lvl.estimatedCount.split('-')[0]) || 0
+        : 0;
+      return sum + count;
+    }, 0);
     const priorityLevels = assessmentData.developmentPlan.priorityLevels.length;
     const keyGaps = Array.from(new Set(assessmentData.levels.flatMap(lvl => lvl.developmentNeeds)));
     // Update the totalLeaders in organizationScope to reflect the actual count
@@ -446,7 +451,6 @@ export default function AssessmentPageComponent({
             <div className="space-y-2">
               <Label htmlFor={`level-count-${index}`}>Estimated Number of Leaders</Label>
               <Select
-                id={`level-count-${index}`}
                 value={level.estimatedCount}
                 onValueChange={(value) => updateLevel(index, 'estimatedCount', value)}
               >
@@ -705,7 +709,6 @@ export default function AssessmentPageComponent({
                   <div className="space-y-2">
                     <Label htmlFor={`level-count-${index}`}>Estimated Number of Leaders</Label>
                     <Select
-                      id={`level-count-${index}`}
                       value={level.estimatedCount}
                       onValueChange={(value) => updateLevel(index, 'estimatedCount', value)}
                     >
