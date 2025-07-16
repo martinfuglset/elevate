@@ -24,7 +24,8 @@ import {
   Loader2,
   Sparkles,
   Plus,
-  Trash2
+  Trash2,
+  GripVertical
 } from 'lucide-react';
 import DevelopmentProgram from '@/components/assessment/DevelopmentProgram';
 import { 
@@ -33,8 +34,23 @@ import {
   ProgramModule, 
   GeneratedProgram, 
   AssessmentPageProps,
-  Leader
+  Level
 } from '@/types/assessment';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const initialData: AssessmentData = {
   assessorInfo: {
@@ -46,18 +62,18 @@ const initialData: AssessmentData = {
     industry: ''
   },
   organizationScope: {
-    totalLeaders: 0, // This will be automatically calculated from leaders array
+    totalLeaders: 0, // This will be automatically calculated from levels array
     departments: [],
     assessmentFocus: []
   },
-  leaders: [],
+  levels: [],
   organizationalGaps: {
     missingSkills: [],
     successionGaps: [],
     strategicAlignment: ''
   },
   developmentPlan: {
-    priorityLeaders: [],
+    priorityLevels: [],
     timeline: '',
     budget: '',
     successMetrics: ''
@@ -123,54 +139,31 @@ const competencies = [
   'Business Acumen'
 ];
 
-const mockLeaders: Leader[] = [
+const estimatedCountOptions = [
+  '1-5',
+  '6-10',
+  '11-20',
+  '21-50',
+  '51-100',
+  '100+'
+];
+
+const mockLevels: Level[] = [
   {
-    id: 'l1',
-    name: 'Alex Johnson',
-    role: 'Head of Sales',
-    department: 'Sales',
-    experience: '8 years',
-    performance: 'high',
-    competencies: ['Strategic Thinking', 'Communication'],
+    id: 'level1',
+    name: 'Executive',
+    description: 'Top-level leaders responsible for overall strategy and direction.',
+    competencies: ['Strategic Thinking', 'Decision Making'],
     developmentNeeds: ['Change Management'],
-    potential: 'high',
-    priority: 'high',
+    estimatedCount: '1-5',
   },
   {
-    id: 'l2',
-    name: 'Maria Chen',
-    role: 'Engineering Manager',
-    department: 'Engineering/Technology',
-    experience: '6 years',
-    performance: 'meeting',
-    competencies: ['Team Building', 'Innovation'],
-    developmentNeeds: ['Business Acumen'],
-    potential: 'medium',
-    priority: 'medium',
-  },
-  {
-    id: 'l3',
-    name: 'Priya Patel',
-    role: 'HR Business Partner',
-    department: 'Human Resources',
-    experience: '10 years',
-    performance: 'high',
-    competencies: ['Coaching & Mentoring', 'Emotional Intelligence'],
-    developmentNeeds: ['Strategic Thinking'],
-    potential: 'high',
-    priority: 'high',
-  },
-  {
-    id: 'l4',
-    name: 'James Smith',
-    role: 'Finance Director',
-    department: 'Finance',
-    experience: '12 years',
-    performance: 'meeting',
-    competencies: ['Decision Making', 'Business Acumen'],
-    developmentNeeds: ['Team Building'],
-    potential: 'medium',
-    priority: 'medium',
+    id: 'level2',
+    name: 'Middle Management',
+    description: 'Managers overseeing teams and translating strategy into action.',
+    competencies: ['Team Building', 'Communication'],
+    developmentNeeds: ['Innovation'],
+    estimatedCount: '6-10',
   },
 ];
 
@@ -190,8 +183,10 @@ export default function AssessmentPageComponent({
   const [aiStep, setAiStep] = useState(0);
   const [aiProgress, setAiProgress] = useState(0);
   const [summary, setSummary] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  const totalSteps = 5;
+  const totalSteps = 3;
   const progress = (currentStep / totalSteps) * 100;
 
   // AI processing steps
@@ -203,6 +198,10 @@ export default function AssessmentPageComponent({
     { message: "Optimizing learning sequence...", duration: 1000, progress: 90 },
     { message: "Finalizing development program...", duration: 500, progress: 100 }
   ];
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+  );
 
   useEffect(() => {
     if (testMode && mockData) {
@@ -222,21 +221,18 @@ export default function AssessmentPageComponent({
 
   const validateStep = (step: number): boolean => {
     const errors: ValidationErrors = {};
-
     if (step === 1) {
       if (!data.assessorInfo.name.trim()) errors.assessorInfo = [...(errors.assessorInfo || []), 'Name is required'];
       if (!data.assessorInfo.email.trim()) errors.assessorInfo = [...(errors.assessorInfo || []), 'Email is required'];
       if (!data.assessorInfo.company.trim()) errors.assessorInfo = [...(errors.assessorInfo || []), 'Company is required'];
     }
-
     if (step === 2) {
       if (data.organizationScope.departments.length === 0) errors.organizationScope = [...(errors.organizationScope || []), 'At least one department must be selected'];
+      // Add any other validation for organizationalGaps or developmentPlan if needed
     }
-
     if (step === 3) {
-      if (data.leaders.length === 0) errors.leaders = [...(errors.leaders || []), 'At least one leader must be added'];
+      if (data.levels.length === 0) errors.levels = [...(errors.levels || []), 'At least one level must be added'];
     }
-
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -292,10 +288,9 @@ export default function AssessmentPageComponent({
 
   const generateProgram = (assessmentData: AssessmentData): GeneratedProgram => {
     // Mock program generation logic
-    const totalLeaders = assessmentData.leaders.length;
-    const priorityLeaders = assessmentData.leaders.filter(l => l.priority === 'high').length;
-    const keyGaps = Array.from(new Set(assessmentData.leaders.flatMap(l => l.developmentNeeds)));
-    
+    const totalLeaders = assessmentData.levels.reduce((sum, lvl) => sum + (lvl.estimatedCount || 0), 0);
+    const priorityLevels = assessmentData.developmentPlan.priorityLevels.length;
+    const keyGaps = Array.from(new Set(assessmentData.levels.flatMap(lvl => lvl.developmentNeeds)));
     // Update the totalLeaders in organizationScope to reflect the actual count
     setData(prev => ({
       ...prev,
@@ -304,11 +299,10 @@ export default function AssessmentPageComponent({
         totalLeaders: totalLeaders
       }
     }));
-
     return {
       summary: {
         totalLeaders,
-        priorityLeaders,
+        priorityLeaders: priorityLevels,
         keyGaps: keyGaps.slice(0, 5),
         timeline: '6 months',
         estimatedBudget: '$25,000 - $50,000'
@@ -346,53 +340,188 @@ export default function AssessmentPageComponent({
         }
       ],
       recommendations: [
-        'Focus development efforts on priority leaders identified in your assessment',
+        'Focus development efforts on priority levels identified in your assessment',
         'Address key organizational gaps through targeted development',
         'Implement regular check-ins and progress tracking',
         'Allocate appropriate budget for comprehensive leadership development'
       ],
       nextSteps: [
-        'Schedule kickoff meeting with priority leaders',
-        'Set up individual development plans',
+        'Schedule kickoff meeting with priority levels',
+        'Set up group development plans',
         'Establish success metrics and tracking mechanisms',
         'Plan regular progress reviews'
       ]
     };
   };
 
-  const addLeader = () => {
-    const newLeader: Leader = {
-      id: `l${data.leaders.length + 1}`,
+  // --- LEVELS LOGIC ---
+  const addLevel = () => {
+    const newLevel: Level = {
+      id: `level${data.levels.length + 1}`,
       name: '',
-      role: '',
-      department: '',
-      experience: '',
-      performance: 'meeting',
+      description: '',
       competencies: [],
       developmentNeeds: [],
-      potential: 'medium',
-      priority: 'medium'
+      estimatedCount: '1-5',
     };
     setData(prev => ({
       ...prev,
-      leaders: [...prev.leaders, newLeader]
+      levels: [...prev.levels, newLevel]
     }));
   };
 
-  const updateLeader = (index: number, field: keyof Leader, value: any) => {
+  const updateLevel = (index: number, field: keyof Level, value: any) => {
     setData(prev => ({
       ...prev,
-      leaders: prev.leaders.map((leader, i) => 
-        i === index ? { ...leader, [field]: value } : leader
+      levels: prev.levels.map((level, i) => 
+        i === index ? { ...level, [field]: value } : level
       )
     }));
   };
 
-  const removeLeader = (index: number) => {
+  const removeLevel = (index: number) => {
     setData(prev => ({
       ...prev,
-      leaders: prev.leaders.filter((_, i) => i !== index)
+      levels: prev.levels.filter((_, i) => i !== index)
     }));
+  };
+
+  // Sortable item
+  function SortableLevel({ level, index }: { level: Level; index: number }) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+      isSorting
+    } = useSortable({ id: level.id });
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition: transition || 'transform 0.3s ease-in-out',
+      zIndex: isDragging ? 50 : undefined,
+      opacity: isDragging ? 0.7 : 1,
+      boxShadow: isDragging ? '0 8px 32px rgba(0,0,0,0.12)' : undefined
+    };
+    return (
+      <div ref={setNodeRef} style={style} className="relative group">
+        <Card className={`p-4 border-l-4 ${index === 0 ? 'border-blue-600' : 'border-gray-300'} transition-all duration-200 bg-white flex flex-col gap-2`}>
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-2">
+              <span {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-blue-600">
+                <GripVertical className="h-5 w-5" />
+              </span>
+              <h4 className="font-medium">Level {index + 1}</h4>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => removeLevel(index)}
+              className="text-red-600 hover:text-red-700"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor={`level-name-${index}`}>Level Name</Label>
+              <Input
+                id={`level-name-${index}`}
+                value={level.name}
+                onChange={(e) => updateLevel(index, 'name', e.target.value)}
+                placeholder="e.g., Executive, Middle Management, Team Lead"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor={`level-desc-${index}`}>Description</Label>
+              <Textarea
+                id={`level-desc-${index}`}
+                value={level.description}
+                onChange={(e) => updateLevel(index, 'description', e.target.value)}
+                placeholder="Describe this leadership level"
+                rows={3}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor={`level-count-${index}`}>Estimated Number of Leaders</Label>
+              <Select
+                id={`level-count-${index}`}
+                value={level.estimatedCount}
+                onValueChange={(value) => updateLevel(index, 'estimatedCount', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select range" />
+                </SelectTrigger>
+                <SelectContent>
+                  {estimatedCountOptions.map(option => (
+                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="mt-4 space-y-4">
+            <div className="space-y-2">
+              <Label>Key Competencies</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {competencies.map((comp) => (
+                  <div key={comp} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`comp-${comp}-${index}`}
+                      checked={level.competencies.includes(comp)}
+                      onCheckedChange={(checked) => {
+                        const newComps = checked
+                          ? [...level.competencies, comp]
+                          : level.competencies.filter(c => c !== comp);
+                        updateLevel(index, 'competencies', newComps);
+                      }}
+                    />
+                    <Label htmlFor={`comp-${comp}-${index}`} className="text-sm">{comp}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Development Needs</Label>
+              <Textarea
+                value={level.developmentNeeds.join(', ')}
+                onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                placeholder="Enter development needs, separated by commas"
+                rows={3}
+              />
+            </div>
+          </div>
+        </Card>
+        {/* Visual hierarchy line */}
+        {index < data.levels.length - 1 && (
+          <div className="absolute left-5 top-full w-0.5 h-6 bg-blue-200 mx-auto z-0" />
+        )}
+      </div>
+    );
+  }
+
+  // Drag-and-drop handlers
+  const handleDragStart = (event: any) => {
+    setActiveId(event.active.id);
+    setDraggedIndex(data.levels.findIndex(l => l.id === event.active.id));
+  };
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    setActiveId(null);
+    setDraggedIndex(null);
+    if (active.id !== over?.id) {
+      const oldIndex = data.levels.findIndex(l => l.id === active.id);
+      const newIndex = data.levels.findIndex(l => l.id === over?.id);
+      setData(prev => ({
+        ...prev,
+        levels: arrayMove(prev.levels, oldIndex, newIndex)
+      }));
+    }
+  };
+  const handleDragCancel = () => {
+    setActiveId(null);
+    setDraggedIndex(null);
   };
 
   const renderAssessorInfo = () => (
@@ -519,165 +648,116 @@ export default function AssessmentPageComponent({
     </div>
   );
 
-  const renderLeaders = () => (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Leadership Assessment</h3>
-        <Button onClick={addLeader} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Leader
-        </Button>
-      </div>
-
-      {data.leaders.map((leader, index) => (
-        <Card key={leader.id} className="p-4">
-          <div className="flex justify-between items-start mb-4">
-            <h4 className="font-medium">Leader {index + 1}</h4>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => removeLeader(index)}
-              className="text-red-600 hover:text-red-700"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor={`name-${index}`}>Name</Label>
-              <Input
-                id={`name-${index}`}
-                value={leader.name}
-                onChange={(e) => updateLeader(index, 'name', e.target.value)}
-                placeholder="Enter leader name"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`role-${index}`}>Role</Label>
-              <Input
-                id={`role-${index}`}
-                value={leader.role}
-                onChange={(e) => updateLeader(index, 'role', e.target.value)}
-                placeholder="Enter role"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`department-${index}`}>Department</Label>
-              <Select value={leader.department} onValueChange={(value) => updateLeader(index, 'department', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select department" />
-                </SelectTrigger>
-                <SelectContent>
-                  {departments.map(dept => (
-                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`experience-${index}`}>Experience</Label>
-              <Input
-                id={`experience-${index}`}
-                value={leader.experience}
-                onChange={(e) => updateLeader(index, 'experience', e.target.value)}
-                placeholder="e.g., 5 years"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div className="space-y-2">
-              <Label>Performance Level</Label>
-              <RadioGroup value={leader.performance} onValueChange={(value) => updateLeader(index, 'performance', value)}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="high" id={`perf-high-${index}`} />
-                  <Label htmlFor={`perf-high-${index}`}>High</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="meeting" id={`perf-meeting-${index}`} />
-                  <Label htmlFor={`perf-meeting-${index}`}>Meeting</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="needs-improvement" id={`perf-needs-${index}`} />
-                  <Label htmlFor={`perf-needs-${index}`}>Needs Improvement</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Potential</Label>
-              <RadioGroup value={leader.potential} onValueChange={(value) => updateLeader(index, 'potential', value)}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="high" id={`pot-high-${index}`} />
-                  <Label htmlFor={`pot-high-${index}`}>High</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="medium" id={`pot-medium-${index}`} />
-                  <Label htmlFor={`pot-medium-${index}`}>Medium</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="low" id={`pot-low-${index}`} />
-                  <Label htmlFor={`pot-low-${index}`}>Low</Label>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Priority</Label>
-              <RadioGroup value={leader.priority} onValueChange={(value) => updateLeader(index, 'priority', value)}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="high" id={`pri-high-${index}`} />
-                  <Label htmlFor={`pri-high-${index}`}>High</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="medium" id={`pri-medium-${index}`} />
-                  <Label htmlFor={`pri-medium-${index}`}>Medium</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="low" id={`pri-low-${index}`} />
-                  <Label htmlFor={`pri-low-${index}`}>Low</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-
-          <div className="mt-4 space-y-4">
-            <div className="space-y-2">
-              <Label>Key Competencies</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {competencies.map((comp) => (
-                  <div key={comp} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`comp-${comp}-${index}`}
-                      checked={leader.competencies.includes(comp)}
-                      onCheckedChange={(checked) => {
-                        const newComps = checked
-                          ? [...leader.competencies, comp]
-                          : leader.competencies.filter(c => c !== comp);
-                        updateLeader(index, 'competencies', newComps);
-                      }}
-                    />
-                    <Label htmlFor={`comp-${comp}-${index}`} className="text-sm">{comp}</Label>
-                  </div>
-                ))}
+  function renderLevels() {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-medium">Leadership Levels Assessment</h3>
+          <Button onClick={addLevel} size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Level
+          </Button>
+        </div>
+        <div className="space-y-8 relative">
+          {data.levels.map((level, index) => (
+            <div key={level.id} className="relative group flex">
+              {/* Indentation and vertical line */}
+              <div className="flex flex-col items-center mr-4">
+                {/* Vertical line for all but last level */}
+                {index < data.levels.length - 1 && (
+                  <div className="w-0.5 h-full bg-blue-200 absolute left-1.5 top-8 bottom-0 z-0" style={{ minHeight: '100%' }} />
+                )}
+                {/* Indentation dot or circle */}
+                <div className="w-3 h-3 rounded-full bg-blue-400 z-10" />
               </div>
+              <Card className={`p-4 flex-1 ml-${index * 4} transition-all duration-200 bg-white flex flex-col gap-2 border-l-4 ${index === 0 ? 'border-blue-600' : 'border-gray-300'}`}>
+                <div className="flex justify-between items-start mb-4">
+                  <h4 className="font-medium">Level {index + 1}</h4>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removeLevel(index)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor={`level-name-${index}`}>Level Name</Label>
+                    <Input
+                      id={`level-name-${index}`}
+                      value={level.name}
+                      onChange={(e) => updateLevel(index, 'name', e.target.value)}
+                      placeholder="e.g., Executive, Middle Management, Team Lead"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`level-desc-${index}`}>Description</Label>
+                    <Textarea
+                      id={`level-desc-${index}`}
+                      value={level.description}
+                      onChange={(e) => updateLevel(index, 'description', e.target.value)}
+                      placeholder="Describe this leadership level"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`level-count-${index}`}>Estimated Number of Leaders</Label>
+                    <Select
+                      id={`level-count-${index}`}
+                      value={level.estimatedCount}
+                      onValueChange={(value) => updateLevel(index, 'estimatedCount', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select range" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {estimatedCountOptions.map(option => (
+                          <SelectItem key={option} value={option}>{option}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="mt-4 space-y-4">
+                  <div className="space-y-2">
+                    <Label>Key Competencies</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {competencies.map((comp) => (
+                        <div key={comp} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`comp-${comp}-${index}`}
+                            checked={level.competencies.includes(comp)}
+                            onCheckedChange={(checked) => {
+                              const newComps = checked
+                                ? [...level.competencies, comp]
+                                : level.competencies.filter(c => c !== comp);
+                              updateLevel(index, 'competencies', newComps);
+                            }}
+                          />
+                          <Label htmlFor={`comp-${comp}-${index}`} className="text-sm">{comp}</Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Development Needs</Label>
+                    <Textarea
+                      value={level.developmentNeeds.join(', ')}
+                      onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                      placeholder="Enter development needs, separated by commas"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              </Card>
             </div>
-
-            <div className="space-y-2">
-              <Label>Development Needs</Label>
-              <Textarea
-                value={leader.developmentNeeds.join(', ')}
-                onChange={(e) => updateLeader(index, 'developmentNeeds', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
-                placeholder="Enter development needs, separated by commas"
-                rows={3}
-              />
-            </div>
-          </div>
-        </Card>
-      ))}
-    </div>
-  );
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   const renderOrganizationalGaps = () => (
     <div className="space-y-6">
@@ -806,13 +886,32 @@ export default function AssessmentPageComponent({
     </div>
   );
 
+  const renderGroupedDetails = () => (
+    <div className="space-y-10">
+      {/* Organization Scope */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Organization Scope</h3>
+        {renderOrganizationScope()}
+      </div>
+      {/* Organizational Gaps */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Organizational Gaps</h3>
+        {renderOrganizationalGaps()}
+      </div>
+      {/* Development Plan */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Development Plan</h3>
+        {renderDevelopmentPlan()}
+      </div>
+    </div>
+  );
+
   const renderProgramRecommendation = () => {
     if (!generatedProgram) return null;
-
     return (
       <DevelopmentProgram 
         program={generatedProgram}
-        leaders={data.leaders}
+        leaders={data.levels} // pass levels as leaders for now
         summary={summary}
         onStartOver={() => setCurrentStep(1)}
       />
@@ -839,28 +938,22 @@ export default function AssessmentPageComponent({
             </div>
             <Progress value={progress} className="h-2" />
           </div>
-
           {/* Step Content */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ClipboardList className="h-5 w-5" />
                 {currentStep === 1 && 'Assessor Information'}
-                {currentStep === 2 && 'Organization Scope'}
-                {currentStep === 3 && 'Leadership Assessment'}
-                {currentStep === 4 && 'Organizational Gaps'}
-                {currentStep === 5 && 'Development Plan'}
+                {currentStep === 2 && 'Organization Details & Plan'}
+                {currentStep === 3 && 'Leadership Levels Assessment'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {currentStep === 1 && renderAssessorInfo()}
-              {currentStep === 2 && renderOrganizationScope()}
-              {currentStep === 3 && renderLeaders()}
-              {currentStep === 4 && renderOrganizationalGaps()}
-              {currentStep === 5 && renderDevelopmentPlan()}
+              {currentStep === 2 && renderGroupedDetails()}
+              {currentStep === 3 && renderLevels()}
             </CardContent>
           </Card>
-
           {/* Navigation */}
           <div className="flex justify-between mt-6">
             <Button
@@ -871,7 +964,6 @@ export default function AssessmentPageComponent({
               <ArrowLeft className="h-4 w-4 mr-2" />
               Previous
             </Button>
-            
             {currentStep < totalSteps ? (
               <Button onClick={handleNext}>
                 Next

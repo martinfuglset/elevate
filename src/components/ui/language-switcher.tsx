@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Globe } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
 
-type Language = 'en' | 'no'
+type Language = 'en'
 
 interface LanguageSwitcherProps {
   className?: string
@@ -15,8 +15,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const { language, setLanguage } = useLanguage()
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'no', name: 'Norsk', flag: '🇳🇴' }
+    { code: 'en', name: 'English', flag: '\ud83c\uddfa\ud83c\uddf8' }
   ]
 
   const handleLanguageChange = (language: Language) => {

@@ -28,6 +28,18 @@ export const pages: PageConfig[] = [
     inMainNav: true,
   },
   {
+    name: 'Program',
+    href: '/program',
+    icon: ClipboardList,
+    inMainNav: true,
+  },
+  {
+    name: 'Candidates',
+    href: '/candidates',
+    icon: Users,
+    inMainNav: true,
+  },
+  {
     name: 'Settings',
     href: '/settings',
     icon: Settings,

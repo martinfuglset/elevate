@@ -30,17 +30,15 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-white border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="bg-[#f3f4f6] rounded-3xl overflow-x-auto">
+      <div className="px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-6">
-              <span className="text-xl font-medium text-gray-900">
-                ELEVATE
-              </span>
+              <Image src="/Frame 15.svg" alt="Elevate Logo" width={108} height={108} className="mr-2" />
             </div>
-            <p className="text-gray-600 mb-6 max-w-md leading-relaxed">
+            <p className="text-black mb-6 max-w-md leading-relaxed">
               {t('footer.description')}
             </p>
             <div className="flex space-x-4">
@@ -50,13 +48,13 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('footer.product.title')}</h3>
+            <h3 className="text-lg font-medium text-black mb-4">{t('footer.product.title')}</h3>
             <ul className="space-y-3">
               {productLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-gray-600 hover:text-gray-900 transition-colors font-medium link-underline"
+                    className="text-black hover:text-gray-700 transition-colors font-medium link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -68,13 +66,13 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">{t('footer.company.title')}</h3>
+            <h3 className="text-lg font-medium text-black mb-4">{t('footer.company.title')}</h3>
             <ul className="space-y-3">
               {companyLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-gray-600 hover:text-gray-900 transition-colors font-medium link-underline"
+                    className="text-black hover:text-gray-700 transition-colors font-medium link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -85,11 +83,11 @@ export function Footer() {
           </div>
         </div>
 
-        <Separator className="my-8" />
+        {/* Removed horizontal line divider */}
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-600 text-sm font-medium">
+          <p className="text-black text-sm font-medium">
             {t('footer.copyright')}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
@@ -97,7 +95,7 @@ export function Footer() {
               <Link 
                 key={link.label}
                 href={link.href} 
-                className="text-gray-600 hover:text-gray-900 text-sm transition-colors font-medium link-underline"
+                className="text-black hover:text-gray-700 text-sm transition-colors font-medium link-underline"
                 onClick={(e) => handleAnchorClick(link.href, e)}
               >
                 {link.label}

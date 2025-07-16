@@ -1,14 +1,23 @@
-export interface Leader {
+// export interface Leader {
+//   id: string;
+//   name: string;
+//   role: string;
+//   department: string;
+//   experience: string;
+//   performance: 'high' | 'meeting' | 'needs-improvement';
+//   competencies: string[];
+//   developmentNeeds: string[];
+//   potential: 'high' | 'medium' | 'low';
+//   priority: 'high' | 'medium' | 'low';
+// }
+
+export interface Level {
   id: string;
   name: string;
-  role: string;
-  department: string;
-  experience: string;
-  performance: 'high' | 'meeting' | 'needs-improvement';
+  description: string;
   competencies: string[];
   developmentNeeds: string[];
-  potential: 'high' | 'medium' | 'low';
-  priority: 'high' | 'medium' | 'low';
+  estimatedCount: string;
 }
 
 export interface AssessmentData {
@@ -25,14 +34,14 @@ export interface AssessmentData {
     departments: string[];
     assessmentFocus: string[];
   };
-  leaders: Leader[];
+  levels: Level[];
   organizationalGaps: {
     missingSkills: string[];
     successionGaps: string[];
     strategicAlignment: string;
   };
   developmentPlan: {
-    priorityLeaders: string[];
+    priorityLevels: string[];
     timeline: string;
     budget: string;
     successMetrics: string;

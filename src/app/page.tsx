@@ -5,7 +5,6 @@ import {
   HeroSection,
   FeaturesSection,
   TestimonialsSection,
-  PricingSection,
   Footer
 } from '@/components/homepage'
 
@@ -15,10 +14,11 @@ export default function HomePage() {
       <Header />
       
       <main className="pt-16">
-        <HeroSection />
-        <FeaturesSection />
-        <TestimonialsSection />
-        <PricingSection />
+        <div className="m-4 overflow-x-hidden flex flex-col gap-4">
+          <HeroSection />
+          <FeaturesSection />
+          <TestimonialsSection />
+        </div>
       </main>
 
       <Footer />

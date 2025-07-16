@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Star, Quote } from 'lucide-react'
+import { Star, Quote, Sparkles } from 'lucide-react'
 
 export function TestimonialsSection() {
   const testimonials = [
@@ -24,12 +24,13 @@ export function TestimonialsSection() {
   ]
 
   return (
-    <section id="testimonials" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="testimonials" className="py-24 rounded-3xl overflow-x-auto">
+      <div className="px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-gray-100 text-gray-700 border-gray-200 rounded-full">
-            Testimonials
-          </Badge>
+          <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300 mb-4">
+            <Quote className="h-4 w-4 text-blue-600 mr-2" />
+            <span className="text-sm font-medium text-blue-700">Testimonials</span>
+          </div>
           <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 tracking-tight">
             What Executives Are Saying
           </h2>
@@ -37,7 +38,7 @@ export function TestimonialsSection() {
         
         <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border-gray-200 hover:border-gray-300 transition-all duration-300 bg-white rounded-2xl">
+            <Card key={index} className="border-gray-200 hover:border-gray-300 transition-all duration-300 rounded-2xl">
               <CardContent className="pt-6">
                 <div className="flex mb-4">
                   {[1, 2, 3, 4, 5].map((i) => (

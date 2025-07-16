@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Check } from 'lucide-react'
+import { Check, Sparkles, Tag } from 'lucide-react'
 
 export function PricingSection() {
   const plans = [
@@ -60,12 +60,13 @@ export function PricingSection() {
   ]
 
   return (
-    <section id="pricing" className="py-24 bg-white">
+    <section id="pricing" className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 bg-gray-100 text-gray-700 border-gray-200 rounded-full">
-            Pricing
-          </Badge>
+          <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300 mb-4">
+            <Tag className="h-4 w-4 text-blue-600 mr-2" />
+            <span className="text-sm font-medium text-blue-700">Pricing</span>
+          </div>
           <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 tracking-tight">
             Choose Your Leadership Development Plan
           </h2>
@@ -78,15 +79,15 @@ export function PricingSection() {
           {plans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`group relative bg-white rounded-2xl ${
+              className={`group relative rounded-2xl ${
                 plan.popular 
-                  ? 'border-2 border-gray-900 bg-gray-50 hover:border-gray-700 transform hover:-translate-y-1' 
+                  ? 'border-2 border-gray-900 hover:border-gray-700 transform hover:-translate-y-1' 
                   : 'border-gray-200 hover:border-gray-300'
               } transition-all duration-300`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-gray-900 text-white border-0 rounded-full">
+                  <Badge className="text-white border-0 rounded-full">
                     Most Popular
                   </Badge>
                 </div>
