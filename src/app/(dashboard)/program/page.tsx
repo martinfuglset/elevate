@@ -88,7 +88,7 @@ export default function ProgramPage() {
                   <div className={`rounded-full p-2 border-2 ${statusBg[module.status]} ${statusColor[module.status]} border-white shadow-md mb-2`}>
                     <Icon className={`h-6 w-6 ${statusColor[module.status]}`} />
                   </div>
-                  <span className={`text-xs font-medium ${statusColor[module.status]}`}>{statusLabel[module.status]}</span>
+                  <span className={`text-xs ${statusColor[module.status]}`}>{statusLabel[module.status]}</span>
                   {idx < modules.length - 1 && (
                     <div className="absolute right-0 top-1/2 w-full h-1 bg-transparent z-0" style={{ left: '50%' }} />
                   )}

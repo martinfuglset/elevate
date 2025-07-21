@@ -4,128 +4,134 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Check, Sparkles, Tag } from 'lucide-react'
+import { Check, Sparkles, ArrowRight, Zap, Users, Target } from 'lucide-react'
 
 export function PricingSection() {
-  const plans = [
+  const options = [
     {
-      name: "Executive",
-      description: "For developing 1-5 leaders",
-      price: "$299",
-      period: "/month",
+      name: "Quick Start",
+      description: "Choose this to simply proceed with the recommended program. Perfect for small/medium organizations.",
+      icon: Zap,
       features: [
-        "AI-powered leadership assessments",
-        "Individual development plans",
+        "Immediate access to your recommended program",
+        "Self-guided implementation",
+        "Standard support and resources",
         "Progress tracking dashboard",
-        "Executive coaching resources",
         "Monthly development reports"
       ],
-      cta: "Start Free Trial",
-      popular: false,
-      checkColor: "text-green-600"
-    },
-    {
-      name: "Leadership Team",
-      description: "For developing 6-15 leaders",
-      price: "$599",
-      period: "/month",
-      features: [
-        "Everything from Executive",
-        "Team development analytics",
-        "Leadership pipeline insights",
-        "Custom development frameworks",
-        "Priority executive support"
-      ],
-      cta: "Start Now",
-      popular: true,
-      checkColor: "text-green-600"
-    },
-    {
-      name: "Enterprise",
-      description: "For large leadership teams",
-      price: "Contact",
-      period: " us",
-      features: [
-        "Everything from Leadership Team",
-        "Custom implementation",
-        "Dedicated success manager",
-        "Advanced analytics & reporting",
-        "SSO & enterprise security"
-      ],
-      cta: "Contact Sales",
+      cta: "Get Started",
       popular: false,
       checkColor: "text-green-600",
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200"
+    },
+    {
+      name: "Tailored",
+      description: "Choose this to get in touch with a consultant that will help with creating a great program. Perfect for anyone needing expert advice.",
+      icon: Users,
+      features: [
+        "Everything from Quick Start",
+        "Personal consultation session",
+        "Custom program adjustments",
+        "Expert guidance and support",
+        "Ongoing consultant availability"
+      ],
+      cta: "Contact Consultant",
+      popular: true,
+      checkColor: "text-blue-600",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200"
+    },
+    {
+      name: "Optimized",
+      description: "Choose this to get in touch with consultant that will do a thorough analysis and focus on giving the optimized learning programs. Perfect for large organizations.",
+      icon: Target,
+      features: [
+        "Everything from Tailored",
+        "Comprehensive organizational analysis",
+        "Custom implementation strategy",
+        "Dedicated success manager",
+        "Advanced analytics & reporting"
+      ],
+      cta: "Contact Expert",
+      popular: false,
+      checkColor: "text-purple-600",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
       outline: true
     }
   ]
 
   return (
-    <section id="pricing" className="py-24">
+    <section id="pricing" className="py-24 bg-gradient-to-b from-white to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300 mb-4">
-            <Tag className="h-4 w-4 text-blue-600 mr-2" />
-            <span className="text-sm font-medium text-blue-700">Pricing</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 tracking-tight">
-            Choose Your Leadership Development Plan
+          <h2 className="text-4xl md:text-5xl text-gray-900 mb-6">
+            Choose Your Next Step
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Flexible pricing that scales with your leadership talent needs. Start developing exceptional leaders today with our risk-free trial.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            Your assessment is complete and your personalized development program is ready. Choose the approach that best fits your organization's needs and timeline.
           </p>
         </div>
+
+
         
         <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <Card 
-              key={index} 
-              className={`group relative rounded-2xl ${
-                plan.popular 
-                  ? 'border-2 border-gray-900 hover:border-gray-700 transform hover:-translate-y-1' 
-                  : 'border-gray-200 hover:border-gray-300'
-              } transition-all duration-300`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="text-white border-0 rounded-full">
-                    Most Popular
-                  </Badge>
-                </div>
-              )}
-              <CardHeader>
-                <CardTitle className="text-2xl text-gray-900 font-medium tracking-tight">{plan.name}</CardTitle>
-                <CardDescription className="text-lg text-gray-600">{plan.description}</CardDescription>
-                <div className="mt-4">
-                  <span className="text-4xl font-medium text-gray-900 tracking-tight">
-                    {plan.price}
-                  </span>
-                  <span className="text-gray-600">{plan.period}</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center">
-                      <Check className={`h-5 w-5 ${plan.checkColor} mr-3 flex-shrink-0`} />
-                      <span className="text-gray-700">{feature}</span>
+          {options.map((option, index) => {
+            const IconComponent = option.icon;
+            return (
+              <Card 
+                key={index} 
+                className={`group relative rounded-2xl bg-white ${option.borderColor} ${
+                  option.popular 
+                    ? 'border-2 border-blue-600 hover:border-blue-500 transform hover:-translate-y-1 shadow-lg' 
+                    : 'border-2 hover:border-gray-300'
+                } transition-all duration-300 flex flex-col`}
+              >
+                {option.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="text-white border-0 rounded-full bg-blue-600">
+                      Most Popular
+                    </Badge>
+                  </div>
+                )}
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`p-2 rounded-lg bg-gray-100 ${option.borderColor}`}>
+                      <IconComponent className="h-6 w-6 text-gray-700" />
                     </div>
-                  ))}
-                </div>
-                <Button 
-                  asChild 
-                  variant={plan.outline ? "outline" : "default"}
-                  className="w-full"
-                >
-                  <Link href="/login">{plan.cta}</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                    <CardTitle className="text-2xl text-gray-900">{option.name}</CardTitle>
+                  </div>
+                  <CardDescription className="text-lg text-gray-600">{option.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col">
+                  <div className="space-y-4 mb-8 flex-1">
+                    {option.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-center">
+                        <Check className={`h-5 w-5 ${option.checkColor} mr-3 flex-shrink-0`} />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Button 
+                    asChild 
+                    variant="outline"
+                    className={`w-full mt-auto ${option.borderColor.replace('border-', 'border-')}`}
+                  >
+                    <Link href="/contact">
+                      {option.cta}
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-600 font-medium">
-            All plans include 14-day free trial. No commitment required. Scale your leadership development as your organization grows.
+        <div className="text-center mt-16">
+          <p className="text-gray-600">
+            All options include access to your personalized development program. Choose the level of support that's right for your organization.
           </p>
         </div>
       </div>

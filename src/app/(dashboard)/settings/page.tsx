@@ -47,7 +47,7 @@ export default function SettingsPage() {
                 </Button>
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-medium">Your Name</h3>
+                <h3 className="text-lg">Your Name</h3>
                 <p className="text-sm text-muted-foreground">Your Role</p>
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function SettingsPage() {
 
             {/* Personal Information */}
             <div className="space-y-4">
-              <h4 className="font-medium">Personal Information</h4>
+              <h4>Personal Information</h4>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
@@ -89,7 +89,7 @@ export default function SettingsPage() {
 
             {/* About Section */}
             <div className="space-y-4">
-              <h4 className="font-medium">About</h4>
+              <h4>About</h4>
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
                 <Textarea 

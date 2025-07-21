@@ -80,7 +80,7 @@ const columns: ColumnDef<Document>[] = [
             <FileText className="h-4 w-4" />
           </div>
           <div>
-            <div className="font-medium">{document.name}</div>
+                            <div>{document.name}</div>
             <div className="text-sm text-muted-foreground">{document.type} • {document.size}</div>
           </div>
         </div>
@@ -116,7 +116,7 @@ const columns: ColumnDef<Document>[] = [
     ),
     cell: ({ row }) => {
       const downloads = row.getValue('downloads') as number
-      return <div className="font-medium">{downloads}</div>
+              return <div>{downloads}</div>
     },
   },
   {

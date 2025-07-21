@@ -42,8 +42,8 @@ export function Sidebar() {
     return (
       <div className="hidden border-r bg-muted/40 md:flex md:flex-col md:w-64">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-medium text-gray-900">ELEVATE</span>
+          <div className="flex items-center">
+            <Image src="/elevate-logo.svg" alt="Elevate Logo" width={96} height={96} />
           </div>
           <div className="ml-auto">
             <Button
@@ -57,7 +57,7 @@ export function Sidebar() {
           </div>
         </div>
         <div className="flex-1 overflow-auto py-4">
-          <nav className="grid items-start gap-2 px-2 text-sm font-medium lg:px-4">
+          <nav className="grid items-start gap-2 px-2 text-sm lg:px-4">
             {mainNavItems.map((item) => (
               <div
                 key={item.name}
@@ -86,12 +86,10 @@ export function Sidebar() {
           isCollapsed ? "justify-center px-2" : "px-4 lg:px-6"
         )}>
           <Link href="/" className={cn(
-            "flex items-center gap-2 transition-all duration-300 overflow-hidden",
+            "flex items-center transition-all duration-300 overflow-hidden",
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
           )}>
-            <span className="text-lg font-medium text-gray-900">
-              ELEVATE
-            </span>
+            <Image src="/elevate-logo.svg" alt="Elevate Logo" width={96} height={96} className="transition-all duration-300" />
           </Link>
           <div className={cn(
             "transition-all duration-300",
@@ -123,7 +121,7 @@ export function Sidebar() {
         
         <div className="flex-1 overflow-auto py-4">
           <nav className={cn(
-            "grid items-start gap-2 text-sm font-medium",
+            "grid items-start gap-2 text-sm",
             isCollapsed ? "px-2" : "px-2 lg:px-4"
           )}>
             {mainNavItems.map((item) => {
@@ -191,7 +189,7 @@ export function Sidebar() {
                       "flex flex-col items-start transition-all duration-300 overflow-hidden",
                       isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
                     )}>
-                      <p className="text-sm font-medium">User</p>
+                      <p className="text-sm">User</p>
                       <p className="text-xs text-muted-foreground">contact@example.com</p>
                     </div>
                   </Button>

@@ -50,12 +50,12 @@ export function Header({ className }: { className?: string }) {
           </CustomButton>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <nav className="grid gap-2 text-lg font-medium">
+          <nav className="grid gap-2 text-lg">
             <Link
-              href="#"
-              className="flex items-center gap-2 text-lg font-medium"
+              href="/"
+              className="flex items-center gap-2 text-lg"
             >
-              <span className="text-lg font-medium text-gray-900">ELEVATE</span>
+                              <span className="text-lg text-gray-900">ELEVATE</span>
             </Link>
             {mainNavItems.map((item) => (
                <Link
@@ -72,7 +72,7 @@ export function Header({ className }: { className?: string }) {
       </Sheet>
       
       <div className="w-full flex-1">
-        <h1 className="text-lg font-medium flex items-center gap-2">
+                    <h1 className="text-lg flex items-center gap-2">
           <PageIcon className="h-5 w-5" />
           {pageName}
         </h1>

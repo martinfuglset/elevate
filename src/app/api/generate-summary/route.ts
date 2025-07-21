@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const {
       assessorInfo,
       organizationScope,
-      leaders,
+      levels,
       organizationalGaps,
       developmentPlan
     } = body
@@ -20,26 +20,27 @@ export async function POST(request: NextRequest) {
     const prompt = `As an expert leadership development consultant, analyze this organizational leadership assessment and provide a compelling, professional summary.
 
 Assessment Context:
-- Assessor: ${assessorInfo.role} at ${assessorInfo.company} (${assessorInfo.companySize}, ${assessorInfo.industry})
-- Organization Scope: ${organizationScope.totalLeaders} leaders across ${organizationScope.departments.join(', ')}
-- Assessment Focus: ${organizationScope.assessmentFocus.join(', ')}
+- Assessor: ${assessorInfo?.role || 'N/A'} at ${assessorInfo?.company || 'N/A'} (${assessorInfo?.companySize || 'N/A'}, ${assessorInfo?.industry || 'N/A'})
+- Organization Scope: ${organizationScope?.totalLeaders || 0} leaders across ${organizationScope?.departments?.join(', ') || 'various departments'}
+- Assessment Focus: ${organizationScope?.assessmentFocus?.join(', ') || 'leadership development'}
 
-Leadership Talent Analysis:
-- Total Leaders Assessed: ${leaders.length}
-- Priority Leaders: ${developmentPlan.priorityLeaders.length}
-- Performance Distribution: ${leaders.filter((l: any) => l.performance === 'high').length} high performers, ${leaders.filter((l: any) => l.performance === 'meeting').length} meeting expectations, ${leaders.filter((l: any) => l.performance === 'needs-improvement').length} need improvement
-- Potential Distribution: ${leaders.filter((l: any) => l.potential === 'high').length} high potential, ${leaders.filter((l: any) => l.potential === 'medium').length} medium potential, ${leaders.filter((l: any) => l.potential === 'low').length} limited potential
+Leadership Levels Analysis:
+- Total Levels Assessed: ${levels?.length || 0}
+- Levels Breakdown: ${levels?.map((level: any, index: number) => `${level.name || `Level ${index + 1}`} (${level.estimatedCount || 'N/A'} leaders)`).join(', ') || 'No levels defined'}
 
 Critical Organizational Gaps:
-${organizationalGaps.missingSkills.map((skill: string) => `- ${skill}`).join('\n')}
+${organizationalGaps?.missingSkills?.map((skill: string) => `- ${skill}`).join('\n') || '- No specific skills gaps identified'}
 
 Succession Planning Gaps:
-${organizationalGaps.successionGaps.map((gap: string) => `- ${gap}`).join('\n')}
+${organizationalGaps?.successionGaps?.map((gap: string) => `- ${gap}`).join('\n') || '- No specific succession gaps identified'}
+
+Strategic Alignment:
+${organizationalGaps?.strategicAlignment || 'No strategic alignment notes provided'}
 
 Development Plan:
-- Timeline: ${developmentPlan.timeline}
-- Budget: ${developmentPlan.budget}
-- Success Metrics: ${developmentPlan.successMetrics}
+- Timeline: ${developmentPlan?.timeline || 'Not specified'}
+- Budget: ${developmentPlan?.budget || 'Not specified'}
+- Success Metrics: ${developmentPlan?.successMetrics || 'Not specified'}
 
 Please provide a 2-3 paragraph summary that:
 1. Highlights the key insights from this assessment

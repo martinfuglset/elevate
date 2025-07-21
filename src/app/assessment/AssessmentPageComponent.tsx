@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -24,8 +23,7 @@ import {
   Loader2,
   Sparkles,
   Plus,
-  Trash2,
-  GripVertical
+  Trash2
 } from 'lucide-react';
 import DevelopmentProgram from '@/components/assessment/DevelopmentProgram';
 import { 
@@ -36,21 +34,7 @@ import {
   AssessmentPageProps,
   Level
 } from '@/types/assessment';
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragOverlay
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+
 
 const initialData: AssessmentData = {
   assessorInfo: {
@@ -173,7 +157,6 @@ export default function AssessmentPageComponent({
   mockGeneratedProgram,
   mockLibraryModules,
 }: AssessmentPageProps) {
-  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState<AssessmentData>(mockData || initialData);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
@@ -183,9 +166,6 @@ export default function AssessmentPageComponent({
   const [aiStep, setAiStep] = useState(0);
   const [aiProgress, setAiProgress] = useState(0);
   const [summary, setSummary] = useState<string | null>(null);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
   const totalSteps = 3;
   const progress = (currentStep / totalSteps) * 100;
 
@@ -198,10 +178,6 @@ export default function AssessmentPageComponent({
     { message: "Optimizing learning sequence...", duration: 1000, progress: 90 },
     { message: "Finalizing development program...", duration: 500, progress: 100 }
   ];
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
-  );
 
   useEffect(() => {
     if (testMode && mockData) {
@@ -392,33 +368,12 @@ export default function AssessmentPageComponent({
   };
 
   // Sortable item
-  function SortableLevel({ level, index }: { level: Level; index: number }) {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-      isDragging,
-      isSorting
-    } = useSortable({ id: level.id });
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition: transition || 'transform 0.3s ease-in-out',
-      zIndex: isDragging ? 50 : undefined,
-      opacity: isDragging ? 0.7 : 1,
-      boxShadow: isDragging ? '0 8px 32px rgba(0,0,0,0.12)' : undefined
-    };
+  function renderLevel({ level, index }: { level: Level; index: number }) {
     return (
-      <div ref={setNodeRef} style={style} className="relative group">
+      <div key={level.id} className="relative group">
         <Card className={`p-4 border-l-4 ${index === 0 ? 'border-blue-600' : 'border-gray-300'} transition-all duration-200 bg-white flex flex-col gap-2`}>
           <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center gap-2">
-              <span {...listeners} {...attributes} className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-blue-600">
-                <GripVertical className="h-5 w-5" />
-              </span>
-              <h4 className="font-medium">Level {index + 1}</h4>
-            </div>
+            <h4>Level {index + 1}</h4>
             <Button
               variant="ghost"
               size="sm"
@@ -504,29 +459,6 @@ export default function AssessmentPageComponent({
       </div>
     );
   }
-
-  // Drag-and-drop handlers
-  const handleDragStart = (event: any) => {
-    setActiveId(event.active.id);
-    setDraggedIndex(data.levels.findIndex(l => l.id === event.active.id));
-  };
-  const handleDragEnd = (event: any) => {
-    const { active, over } = event;
-    setActiveId(null);
-    setDraggedIndex(null);
-    if (active.id !== over?.id) {
-      const oldIndex = data.levels.findIndex(l => l.id === active.id);
-      const newIndex = data.levels.findIndex(l => l.id === over?.id);
-      setData(prev => ({
-        ...prev,
-        levels: arrayMove(prev.levels, oldIndex, newIndex)
-      }));
-    }
-  };
-  const handleDragCancel = () => {
-    setActiveId(null);
-    setDraggedIndex(null);
-  };
 
   const renderAssessorInfo = () => (
     <div className="space-y-6">
@@ -656,7 +588,7 @@ export default function AssessmentPageComponent({
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium">Leadership Levels Assessment</h3>
+                      <h3 className="text-lg">Leadership Levels Assessment</h3>
           <Button onClick={addLevel} size="sm">
             <Plus className="h-4 w-4 mr-2" />
             Add Level
@@ -676,7 +608,7 @@ export default function AssessmentPageComponent({
               </div>
               <Card className={`p-4 flex-1 ml-${index * 4} transition-all duration-200 bg-white flex flex-col gap-2 border-l-4 ${index === 0 ? 'border-blue-600' : 'border-gray-300'}`}>
                 <div className="flex justify-between items-start mb-4">
-                  <h4 className="font-medium">Level {index + 1}</h4>
+                  <h4>Level {index + 1}</h4>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -846,7 +778,7 @@ export default function AssessmentPageComponent({
         <Loader2 className="h-8 w-8 text-white animate-spin" />
       </div>
       <div>
-        <h2 className="text-xl font-medium text-gray-900 mb-2">Generating Your Development Program</h2>
+                    <h2 className="text-xl text-gray-900 mb-2">Generating Your Development Program</h2>
         <p className="text-gray-600">Our AI is analyzing your assessment data and creating a personalized program</p>
       </div>
 
@@ -874,7 +806,7 @@ export default function AssessmentPageComponent({
               )}
             </div>
             <div className="flex-1 text-left">
-              <p className="text-sm font-medium text-gray-900">{step.message}</p>
+              <p className="text-sm text-gray-900">{step.message}</p>
             </div>
           </div>
         ))}
@@ -893,17 +825,17 @@ export default function AssessmentPageComponent({
     <div className="space-y-10">
       {/* Organization Scope */}
       <div>
-        <h3 className="text-lg font-medium mb-2">Organization Scope</h3>
+                    <h3 className="text-lg mb-2">Organization Scope</h3>
         {renderOrganizationScope()}
       </div>
       {/* Organizational Gaps */}
       <div>
-        <h3 className="text-lg font-medium mb-2">Organizational Gaps</h3>
+                    <h3 className="text-lg mb-2">Organizational Gaps</h3>
         {renderOrganizationalGaps()}
       </div>
       {/* Development Plan */}
       <div>
-        <h3 className="text-lg font-medium mb-2">Development Plan</h3>
+                    <h3 className="text-lg mb-2">Development Plan</h3>
         {renderDevelopmentPlan()}
       </div>
     </div>
@@ -922,7 +854,7 @@ export default function AssessmentPageComponent({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white h-full">
       {isGenerating ? (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {renderGeneratingProgram()}

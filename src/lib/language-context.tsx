@@ -76,6 +76,7 @@ const translations = {
     'footer.company.careers': 'Careers',
     'footer.company.blog': 'Blog',
     'footer.company.contact': 'Contact',
+    'footer.legal.title': 'Legal',
     'footer.legal.privacy': 'Privacy',
     'footer.legal.terms': 'Terms',
     'footer.legal.cookies': 'Cookies',

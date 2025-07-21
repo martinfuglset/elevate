@@ -45,8 +45,8 @@
     /* Removed horizontal padding and max-width for full width */
   }
   h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    letter-spacing: 0em;
+    font-weight: 400;
+    letter-spacing: normal;
   }
 }
 
@@ -841,4 +841,58 @@ header nav.md\:flex {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Print Styles */
+@media print {
+  /* Hide navigation and buttons that shouldn't be printed */
+  header, 
+  footer, 
+  button,
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure content is readable */
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+    color: black;
+    background: white;
+  }
+  
+  /* Ensure cards and sections print properly */
+  .card,
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  /* Add page breaks where appropriate */
+  .page-break {
+    page-break-before: always;
+  }
+  
+  /* Ensure proper spacing */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  /* Remove shadows and borders for cleaner print */
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  /* Ensure text is black for better readability */
+  * {
+    color: black !important;
+  }
+  
+  /* Hide decorative elements */
+  .bg-gradient-to-b,
+  .bg-purple-50,
+  .bg-blue-50 {
+    background: white !important;
+  }
 } 

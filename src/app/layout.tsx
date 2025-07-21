@@ -4,8 +4,11 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/lib/language-context'
 
 export const metadata: Metadata = {
-  title: 'SaaS MVP Template',
+  title: 'Elevate',
   description: 'A modern and feature-rich SaaS MVP template built with Next.js, ShadCN, and more.',
+  icons: {
+    icon: '/elevate-icon.svg',
+  },
 }
 
 export default function RootLayout({

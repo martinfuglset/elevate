@@ -13,9 +13,9 @@ export function CTASection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300 mb-4">
           <Rocket className="h-4 w-4 text-blue-600 mr-2" />
-          <span className="text-sm font-medium text-blue-700">{t('cta.badge')}</span>
+          <span className="text-sm text-blue-700">{t('cta.badge')}</span>
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
+                  <h2 className="text-4xl md:text-5xl text-gray-900 mb-6">
           {t('cta.title')}
         </h2>
         <p className="text-xl text-gray-600 mb-10">

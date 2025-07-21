@@ -136,7 +136,7 @@ export default function HelpPage() {
             {popularArticles.map((article, index) => (
               <div key={index} className="flex items-start justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
                 <div className="space-y-2">
-                  <h3 className="font-medium">{article.title}</h3>
+                  <h3>{article.title}</h3>
                   <p className="text-sm text-muted-foreground">{article.description}</p>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs">{article.category}</Badge>
@@ -166,7 +166,7 @@ export default function HelpPage() {
                   <method.icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 space-y-2">
-                  <h3 className="font-medium">{method.title}</h3>
+                  <h3>{method.title}</h3>
                   <p className="text-sm text-muted-foreground">{method.description}</p>
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     {method.action}
@@ -192,28 +192,28 @@ export default function HelpPage() {
             <Button variant="outline" className="h-auto p-4 flex-col items-start gap-2">
               <BookOpen className="h-5 w-5" />
               <div className="text-left">
-                <div className="font-medium">Documentation</div>
+                <div>Documentation</div>
                 <div className="text-xs text-muted-foreground">Complete API docs</div>
               </div>
             </Button>
             <Button variant="outline" className="h-auto p-4 flex-col items-start gap-2">
               <FileText className="h-5 w-5" />
               <div className="text-left">
-                <div className="font-medium">Tutorials</div>
+                <div>Tutorials</div>
                 <div className="text-xs text-muted-foreground">Step-by-step guides</div>
               </div>
             </Button>
             <Button variant="outline" className="h-auto p-4 flex-col items-start gap-2">
               <MessageCircle className="h-5 w-5" />
               <div className="text-left">
-                <div className="font-medium">Community</div>
+                <div>Community</div>
                 <div className="text-xs text-muted-foreground">Join discussions</div>
               </div>
             </Button>
             <Button variant="outline" className="h-auto p-4 flex-col items-start gap-2">
               <HelpCircle className="h-5 w-5" />
               <div className="text-left">
-                <div className="font-medium">Status</div>
+                <div>Status</div>
                 <div className="text-xs text-muted-foreground">System status</div>
               </div>
             </Button>

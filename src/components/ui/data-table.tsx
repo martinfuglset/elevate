@@ -106,7 +106,7 @@ export function DataTable<TData, TValue>({
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {title && <h2 className="text-2xl font-medium tracking-tight">{title}</h2>}
+            {title && <h2 className="text-2xl">{title}</h2>}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">

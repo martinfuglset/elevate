@@ -33,7 +33,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
             <span className="text-[0.70rem] uppercase text-muted-foreground">
               Mobile
             </span>
-            <span className="font-bold text-muted-foreground">
+                            <span className="text-muted-foreground">
               {payload[0].value}
             </span>
           </div>
@@ -41,7 +41,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
             <span className="text-[0.70rem] uppercase text-muted-foreground">
               Desktop
             </span>
-            <span className="font-bold">
+                            <span>
               {payload[1].value}
             </span>
           </div>

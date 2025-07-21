@@ -27,14 +27,13 @@ export function FeaturesSection() {
   ]
 
   return (
-    <section id="features" className="py-24 w-full bg-gray-100 rounded-3xl overflow-x-auto">
-      <div className="px-4 sm:px-6 lg:px-8">
+    <section id="features" className="py-24 w-full rounded-3xl overflow-x-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 rounded-full border border-blue-300 mb-4">
+            <div className="inline-flex items-center px-4 py-2 rounded-full mb-4">
               <Hammer className="h-4 w-4 text-blue-600 mr-2" />
-              <span className="text-sm font-medium text-blue-700">Executive Development Tools</span>
+              <span className="text-sm text-blue-700">Executive Development Tools</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-medium text-gray-900 mb-6 tracking-tight">
+                          <h2 className="text-4xl md:text-5xl text-gray-900 mb-6">
               {t('features.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -48,7 +47,7 @@ export function FeaturesSection() {
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform bg-gray-900">
                     <feature.icon className="h-7 w-7 text-white" />
                   </div>
-                  <CardTitle className="text-xl text-gray-900 font-medium tracking-tight">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl text-gray-900">{feature.title}</CardTitle>
                   <CardDescription className="text-base text-gray-600 leading-relaxed">
                     {feature.description}
                   </CardDescription>
@@ -56,7 +55,6 @@ export function FeaturesSection() {
               </Card>
             ))}
           </div>
-      </div>
     </section>
   )
 } 
