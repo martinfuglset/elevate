@@ -54,8 +54,30 @@
   * {
     @apply border-border;
   }
+  html {
+    position: relative;
+    min-height: 100vh;
+  }
+  html::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/gradient-optimized%201.svg');
+    background-size: 200% auto;
+    background-position: center 10%;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    opacity: 0.75;
+    z-index: -1;
+    pointer-events: none;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: transparent;
+    min-height: 100vh;
   }
 }
 

@@ -28,8 +28,8 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-[#f3f4f6]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
+    <footer className="pt-4 pb-6 w-full">
+      <div className="bg-white rounded-3xl p-6 md:p-8 border border-gray-200 mx-4 md:mx-8">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
