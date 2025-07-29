@@ -7,7 +7,7 @@
 
 export const fonts = {
   serif: {
-    family: 'Inter, system-ui, -apple-system, sans-serif',
+    family: 'Geist Sans, system-ui, -apple-system, sans-serif',
     weights: {
       normal: 400,
       medium: 500,
@@ -16,7 +16,7 @@ export const fonts = {
     },
   },
   sans: {
-    family: 'Inter, system-ui, -apple-system, sans-serif',
+    family: 'Geist Sans, system-ui, -apple-system, sans-serif',
     weights: {
       light: 300,
       normal: 400,
@@ -26,7 +26,7 @@ export const fonts = {
     },
   },
   mono: {
-    family: 'Inter, system-ui, -apple-system, sans-serif',
+    family: 'Geist Mono, ui-monospace, SFMono-Regular, monospace',
     weights: {
       normal: 400,
       medium: 500,
@@ -40,7 +40,7 @@ export const fonts = {
 // ============================================================================
 
 export const typography = {
-  // Headings - Use Inter font
+  // Headings - Use Geist Sans font
   h1: {
     fontFamily: fonts.serif.family,
     fontWeight: fonts.serif.weights.normal,
@@ -84,7 +84,7 @@ export const typography = {
     letterSpacing: '0',
   },
 
-  // Body text - Use Inter font
+  // Body text - Use Geist Sans font
   body: {
     fontFamily: fonts.sans.family,
     fontWeight: fonts.sans.weights.normal,
@@ -107,7 +107,7 @@ export const typography = {
     letterSpacing: '0',
   },
 
-  // Caption and labels - Use Inter font
+  // Caption and labels - Use Geist Sans font
   caption: {
     fontFamily: fonts.sans.family,
     fontWeight: fonts.sans.weights.normal,
@@ -123,7 +123,7 @@ export const typography = {
     letterSpacing: '0.01em',
   },
 
-  // Code and technical text - Use Inter font
+  // Code and technical text - Use Geist Mono font
   code: {
     fontFamily: fonts.mono.family,
     fontWeight: fonts.mono.weights.normal,

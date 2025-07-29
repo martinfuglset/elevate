@@ -6,14 +6,15 @@ This is the single source of truth for all design tokens in the Elevate applicat
 
 The design system is modular and each part is easily replaceable. It provides:
 
-- **Typography**: Inter font for all text elements
+- **Typography**: Geist Sans font for all text elements
 - **Spacing**: Consistent spacing scale
 - **Shadows**: Standard shadow definitions
 - **Border Radius**: Consistent border radius values
 
 ## Fonts
 
-- **Inter**: Used for all text elements (headings, body text, UI, code)
+- **Geist Sans**: Used for all text elements (headings, body text, UI)
+- **Geist Mono**: Used for code and technical text
 
 ## Usage
 
@@ -52,14 +53,14 @@ function MyComponent() {
 The design system is integrated with Tailwind CSS:
 
 ```jsx
-<h1 className="font-sans text-4xl">Inter heading</h1>
-<p className="font-sans">Inter body text</p>
-<code className="font-sans">Inter code</code>
+<h1 className="font-sans text-4xl">Geist Sans heading</h1>
+<p className="font-sans">Geist Sans body text</p>
+<code className="font-mono">Geist Mono code</code>
 ```
 
 ## Typography Scale
 
-### Headings (Inter)
+### Headings (Geist Sans)
 - `h1`: 3.5rem (56px) - Main page titles
 - `h2`: 2.5rem (40px) - Section headings
 - `h3`: 2rem (32px) - Subsection headings
@@ -67,16 +68,16 @@ The design system is integrated with Tailwind CSS:
 - `h5`: 1.25rem (20px) - Small headings
 - `h6`: 1rem (16px) - Micro headings
 
-### Body Text (Inter)
+### Body Text (Geist Sans)
 - `bodyLarge`: 1.125rem (18px) - Large body text
 - `body`: 1rem (16px) - Standard body text
 - `bodySmall`: 0.875rem (14px) - Small body text
 
-### UI Text (Inter)
+### UI Text (Geist Sans)
 - `label`: 0.875rem (14px) - Form labels
 - `caption`: 0.75rem (12px) - Captions and metadata
 
-### Code (Inter)
+### Code (Geist Mono)
 - `codeLarge`: 1rem (16px) - Large code blocks
 - `code`: 0.875rem (14px) - Inline code
 
@@ -121,4 +122,4 @@ All components will automatically use the updated values since they import from 
 
 ## Example Component
 
-See `src/components/examples/design-system-example.tsx` for a complete example of how to use the design system. 
+See `src/components/examples/design-system-example.tsx` for a complete example of how to use the design system.

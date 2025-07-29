@@ -28,7 +28,7 @@ export function FeaturesSection() {
 
   return (
     <section id="features" className="pt-24 pb-4 w-full">
-      <div className="bg-card rounded-3xl p-6 md:p-8 border border-border mx-3 md:mx-6">
+      <div className="bg-card rounded-3xl p-6 md:p-8 mx-3 md:mx-6">
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full mb-4">
             <Hammer className="h-4 w-4 text-primary mr-2" />

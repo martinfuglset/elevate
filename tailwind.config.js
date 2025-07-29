@@ -18,7 +18,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['Geist', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Geist Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",

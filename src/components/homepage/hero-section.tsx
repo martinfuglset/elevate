@@ -17,15 +17,15 @@ export function HeroSection() {
           {/* Badge with consistent styling */}
           <div className="inline-flex items-center px-4 py-2 rounded-full mb-4 md:mb-6 bg-transparent">
             <Sparkles className="h-4 w-4 text-foreground mr-2" />
-            <span className="text-sm text-foreground font-mono">AI-Powered Leadership Development</span>
+            <span className="text-foreground">AI-Powered Leadership Development</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground mb-3 md:mb-4 leading-tight font-semibold tracking-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground mb-3 md:mb-4 leading-tight font-medium tracking-tight">
             Transform Leaders<br />
             Transform Organizations
           </h1>
           
-          <p className="text-lg md:text-xl lg:text-2xl text-foreground mb-6 md:mb-8 max-w-2xl md:max-w-3xl leading-relaxed opacity-95">
+          <p className="text-xl text-foreground mb-6 md:mb-8 max-w-2xl md:max-w-3xl leading-relaxed opacity-95">
             {t('hero.subtitle')}
           </p>
           
