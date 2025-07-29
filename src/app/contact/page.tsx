@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, ArrowLeft, Send } from 'lucide-react'
+import { CheckCircle, ArrowLeft, Send, Clock, Users, Target } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ContactPage() {
@@ -47,22 +47,22 @@ export default function ContactPage() {
                 <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                   <CheckCircle className="h-8 w-8 text-green-600" />
                 </div>
-                <CardTitle className="text-2xl text-gray-900">Thank You!</CardTitle>
-                <CardDescription className="text-lg text-gray-600">
-                  We've received your inquiry and will be in touch within 24 hours.
+                <CardTitle className="text-2xl text-foreground">Thank You!</CardTitle>
+                <CardDescription className="text-lg text-muted-foreground">
+                  We've received your message and will get back to you soon.
                 </CardDescription>
+                <div className="mt-4">
+                  <p className="text-muted-foreground mb-6">
+                    In the meantime, you can explore our platform or check out our resources.
+                  </p>
+                  <Button asChild>
+                    <Link href="/">
+                      Return to Home
+                      <ArrowLeft className="h-4 w-4 ml-2" />
+                    </Link>
+                  </Button>
+                </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-6">
-                  Our team will review your information and reach out to discuss the next steps for your leadership development program.
-                </p>
-                <Button asChild>
-                  <Link href="/">
-                    Return to Home
-                    <ArrowLeft className="h-4 w-4 ml-2" />
-                  </Link>
-                </Button>
-              </CardContent>
             </Card>
           </div>
         </main>
@@ -77,11 +77,11 @@ export default function ContactPage() {
       <main className="pt-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl text-gray-900 mb-6">
-              Let's Get Started
+            <h1 className="text-4xl md:text-5xl text-foreground mb-6">
+              Let's Transform Your Leadership Development
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Tell us a bit more about your organization and we'll help you get started with your leadership development program.
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Ready to take your organization's leadership to the next level? Get in touch with our experts.
             </p>
           </div>
 
@@ -183,32 +183,26 @@ export default function ContactPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-blue-600 text-xs font-medium">1</span>
+                    <div className="text-center p-6">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Clock className="h-6 w-6 text-primary" />
                       </div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Quick Response</h4>
-                        <p className="text-sm text-gray-600">We'll get back to you within 24 hours with next steps.</p>
-                      </div>
+                      <h4 className="font-medium text-foreground">Quick Response</h4>
+                      <p className="text-sm text-muted-foreground">We'll get back to you within 24 hours with next steps.</p>
                     </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-blue-600 text-xs font-medium">2</span>
+                    <div className="text-center p-6">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Users className="h-6 w-6 text-primary" />
                       </div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Personalized Discussion</h4>
-                        <p className="text-sm text-gray-600">We'll discuss your specific needs and how to best implement your program.</p>
-                      </div>
+                      <h4 className="font-medium text-foreground">Personalized Discussion</h4>
+                      <p className="text-sm text-muted-foreground">We'll discuss your specific needs and how to best implement your program.</p>
                     </div>
-                    <div className="flex items-start space-x-3">
-                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-blue-600 text-xs font-medium">3</span>
+                    <div className="text-center p-6">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Target className="h-6 w-6 text-primary" />
                       </div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">Get Started</h4>
-                        <p className="text-sm text-gray-600">Begin your leadership development journey with expert guidance.</p>
-                      </div>
+                      <h4 className="font-medium text-foreground">Get Started</h4>
+                      <p className="text-sm text-muted-foreground">Begin your leadership development journey with expert guidance.</p>
                     </div>
                   </div>
                 </CardContent>
@@ -219,14 +213,14 @@ export default function ContactPage() {
                   <CardTitle>Need Immediate Help?</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    If you need immediate assistance or have urgent questions, feel free to reach out directly.
+                  <p className="text-muted-foreground mb-4">
+                    Have questions about our platform or need technical support?
                   </p>
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600">
-                      <strong>Email:</strong> hello@elevate.com
+                  <div className="space-y-2 text-sm">
+                    <p className="text-muted-foreground">
+                      <strong>Email:</strong> support@elevate.com
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-muted-foreground">
                       <strong>Phone:</strong> +1 (555) 123-4567
                     </p>
                   </div>

@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { mainNavItems, allPages } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/lib/sidebar-context'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname()
@@ -37,7 +38,7 @@ export function Header({ className }: { className?: string }) {
   }, [toggleSidebar])
 
   return (
-    <header className={cn("flex h-14 items-center gap-4 border-b bg-white px-4 lg:h-[60px] lg:px-6", className)}>
+    <header className={cn("flex h-14 items-center gap-4 bg-background px-4 lg:h-[60px] lg:px-6", className)}>
       {/* Mobile menu */}
       <Sheet>
         <SheetTrigger asChild>
@@ -55,7 +56,7 @@ export function Header({ className }: { className?: string }) {
               href="/"
               className="flex items-center gap-2 text-lg"
             >
-                              <span className="text-lg text-gray-900">ELEVATE</span>
+                              <span className="text-lg text-foreground">ELEVATE</span>
             </Link>
             {mainNavItems.map((item) => (
                <Link
@@ -77,6 +78,9 @@ export function Header({ className }: { className?: string }) {
           {pageName}
         </h1>
       </div>
+
+      {/* Theme toggle */}
+      <ThemeToggle />
     </header>
   )
 } 

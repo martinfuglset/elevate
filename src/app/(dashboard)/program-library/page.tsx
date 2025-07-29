@@ -159,7 +159,7 @@ export default function ProgramLibraryPage() {
           <Card key={module.id} className="relative overflow-hidden">
             {module.isCompleted && (
               <div className="absolute top-4 right-4 z-10">
-                <CheckCircle className="h-6 w-6 text-gray-600" />
+                <CheckCircle className="h-6 w-6 text-muted-foreground" />
               </div>
             )}
             <CardHeader>
@@ -178,13 +178,13 @@ export default function ProgramLibraryPage() {
               </p>
               
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center space-x-2">
                   <Clock className="h-4 w-4" />
                   {module.duration}
                 </div>
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-gray-400 text-gray-400" />
-                  {module.rating}
+                <div className="flex items-center space-x-1">
+                  <Star className="h-4 w-4 fill-muted-foreground text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">4.8</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />

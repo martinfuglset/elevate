@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Filter, Plus, Users, Target, TrendingUp } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const mockCandidates = [
   {
@@ -65,21 +66,27 @@ const mockCandidates = [
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'Completed': return 'bg-green-100 text-green-800';
-    case 'In Progress': return 'bg-blue-100 text-blue-800';
-    case 'Not Started': return 'bg-gray-100 text-gray-800';
-    default: return 'bg-gray-100 text-gray-800';
+    case 'Completed': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+    case 'In Progress': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+    case 'Not Started': return 'bg-muted text-muted-foreground';
+    default: return 'bg-muted text-muted-foreground';
   }
 };
 
 const getLevelColor = (level: string) => {
   switch (level) {
-    case 'Executive': return 'bg-purple-100 text-purple-800';
-    case 'Senior Leadership': return 'bg-indigo-100 text-indigo-800';
-    case 'Middle Management': return 'bg-blue-100 text-blue-800';
-    case 'Emerging Leader': return 'bg-green-100 text-green-800';
-    default: return 'bg-gray-100 text-gray-800';
+    case 'Executive': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400';
+    case 'Senior': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+    case 'Mid-level': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+    case 'Junior': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+    default: return 'bg-muted text-muted-foreground';
   }
+};
+
+const getProgressColor = (progress: number) => {
+  if (progress >= 80) return 'bg-green-500';
+  if (progress >= 50) return 'bg-yellow-500';
+  return 'bg-red-500';
 };
 
 export default function CandidatesPage() {
@@ -202,35 +209,36 @@ export default function CandidatesPage() {
               </thead>
               <tbody>
                 {mockCandidates.map((candidate) => (
-                  <tr key={candidate.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4 font-medium">{candidate.name}</td>
-                    <td className="py-3 px-4">{candidate.role}</td>
-                    <td className="py-3 px-4">{candidate.department}</td>
+                  <tr key={candidate.id} className="border-b hover:bg-muted/50">
                     <td className="py-3 px-4">
-                      <Badge className={getLevelColor(candidate.level)}>
-                        {candidate.level}
-                      </Badge>
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{candidate.assessmentScore}</span>
-                        <div className="w-16 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full" 
-                            style={{ width: `${candidate.assessmentScore}%` }}
-                          ></div>
+                      <div className="flex items-center space-x-3">
+                        <Avatar>
+                          <AvatarFallback>{candidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{candidate.name}</div>
+                          <div className="text-sm text-muted-foreground">{candidate.role}</div>
                         </div>
                       </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="w-16 bg-muted rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(candidate.assessmentScore)}`}
+                          style={{ width: `${candidate.assessmentScore}%` }}
+                        />
+                      </div>
+                      <span className="text-sm text-muted-foreground">{candidate.assessmentScore}%</span>
                     </td>
                     <td className="py-3 px-4">
                       <Badge className={getStatusColor(candidate.status)}>
                         {candidate.status}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-muted-foreground">
                       {candidate.lastAssessment || 'N/A'}
                     </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
+                    <td className="py-3 px-4 text-sm text-muted-foreground">
                       {candidate.nextReview}
                     </td>
                   </tr>

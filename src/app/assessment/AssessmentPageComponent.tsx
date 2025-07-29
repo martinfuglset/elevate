@@ -370,93 +370,60 @@ export default function AssessmentPageComponent({
   // Sortable item
   function renderLevel({ level, index }: { level: Level; index: number }) {
     return (
-      <div key={level.id} className="relative group">
-        <Card className={`p-4 border-l-4 ${index === 0 ? 'border-blue-600' : 'border-gray-300'} transition-all duration-200 bg-white flex flex-col gap-2`}>
-          <div className="flex justify-between items-start mb-4">
-            <h4>Level {index + 1}</h4>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => removeLevel(index)}
-              className="text-red-600 hover:text-red-700"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+      <Card className={`p-4 border-l-4 ${index === 0 ? 'border-primary' : 'border-border'} transition-all duration-200 bg-card flex flex-col gap-2`}>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">{level.name}</h3>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => removeLevel(index)}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="space-y-3">
+          <div>
+            <Label className="text-sm font-medium">Description</Label>
+            <Textarea
+              value={level.description}
+              onChange={(e) => updateLevel(index, 'description', e.target.value)}
+              placeholder="Describe this leadership level..."
+              className="min-h-[80px]"
+            />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor={`level-name-${index}`}>Level Name</Label>
-              <Input
-                id={`level-name-${index}`}
-                value={level.name}
-                onChange={(e) => updateLevel(index, 'name', e.target.value)}
-                placeholder="e.g., Executive, Middle Management, Team Lead"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`level-desc-${index}`}>Description</Label>
-              <Textarea
-                id={`level-desc-${index}`}
-                value={level.description}
-                onChange={(e) => updateLevel(index, 'description', e.target.value)}
-                placeholder="Describe this leadership level"
-                rows={3}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`level-count-${index}`}>Estimated Number of Leaders</Label>
-              <Select
-                value={level.estimatedCount}
-                onValueChange={(value) => updateLevel(index, 'estimatedCount', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select range" />
-                </SelectTrigger>
-                <SelectContent>
-                  {estimatedCountOptions.map(option => (
-                    <SelectItem key={option} value={option}>{option}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          
+          <div>
+            <Label className="text-sm font-medium">Key Competencies</Label>
+            <Textarea
+              value={level.competencies.join('\n')}
+              onChange={(e) => updateLevel(index, 'competencies', e.target.value.split('\n').filter(c => c.trim()))}
+              placeholder="Enter competencies, one per line..."
+              className="min-h-[80px]"
+            />
           </div>
-          <div className="mt-4 space-y-4">
-            <div className="space-y-2">
-              <Label>Key Competencies</Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {competencies.map((comp) => (
-                  <div key={comp} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`comp-${comp}-${index}`}
-                      checked={level.competencies.includes(comp)}
-                      onCheckedChange={(checked) => {
-                        const newComps = checked
-                          ? [...level.competencies, comp]
-                          : level.competencies.filter(c => c !== comp);
-                        updateLevel(index, 'competencies', newComps);
-                      }}
-                    />
-                    <Label htmlFor={`comp-${comp}-${index}`} className="text-sm">{comp}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Development Needs</Label>
-              <Textarea
-                value={level.developmentNeeds.join(', ')}
-                onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
-                placeholder="Enter development needs, separated by commas"
-                rows={3}
-              />
-            </div>
+          
+          <div>
+            <Label className="text-sm font-medium">Development Needs</Label>
+            <Textarea
+              value={level.developmentNeeds.join('\n')}
+              onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split('\n').filter(c => c.trim()))}
+              placeholder="Enter development needs, one per line..."
+              className="min-h-[80px]"
+            />
           </div>
-        </Card>
-        {/* Visual hierarchy line */}
-        {index < data.levels.length - 1 && (
-          <div className="absolute left-5 top-full w-0.5 h-6 bg-blue-200 mx-auto z-0" />
-        )}
-      </div>
+          
+          <div>
+            <Label className="text-sm font-medium">Estimated Count</Label>
+            <Input
+              value={level.estimatedCount}
+              onChange={(e) => updateLevel(index, 'estimatedCount', e.target.value)}
+              placeholder="e.g., 5-10 leaders"
+            />
+          </div>
+        </div>
+      </Card>
     );
   }
 
@@ -587,102 +554,67 @@ export default function AssessmentPageComponent({
   function renderLevels() {
     return (
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-                      <h3 className="text-lg">Leadership Levels Assessment</h3>
-          <Button onClick={addLevel} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Leadership Levels</h3>
+          <Button onClick={addLevel} size="sm" className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
             Add Level
           </Button>
         </div>
-        <div className="space-y-8 relative">
+        
+        <div className="space-y-4">
           {data.levels.map((level, index) => (
-            <div key={level.id} className="relative group flex">
-              {/* Indentation and vertical line */}
-              <div className="flex flex-col items-center mr-4">
-                {/* Vertical line for all but last level */}
-                {index < data.levels.length - 1 && (
-                  <div className="w-0.5 h-full bg-blue-200 absolute left-1.5 top-8 bottom-0 z-0" style={{ minHeight: '100%' }} />
-                )}
-                {/* Indentation dot or circle */}
-                <div className="w-3 h-3 rounded-full bg-blue-400 z-10" />
-              </div>
-              <Card className={`p-4 flex-1 ml-${index * 4} transition-all duration-200 bg-white flex flex-col gap-2 border-l-4 ${index === 0 ? 'border-blue-600' : 'border-gray-300'}`}>
-                <div className="flex justify-between items-start mb-4">
-                  <h4>Level {index + 1}</h4>
+            <div key={level.id} className="relative">
+              <Card className={`p-4 border-l-4 ${index === 0 ? 'border-primary' : 'border-border'} transition-all duration-200 bg-card flex flex-col gap-2`}>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">{level.name}</h3>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => removeLevel(index)}
-                    className="text-red-600 hover:text-red-700"
+                    className="text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor={`level-name-${index}`}>Level Name</Label>
-                    <Input
-                      id={`level-name-${index}`}
-                      value={level.name}
-                      onChange={(e) => updateLevel(index, 'name', e.target.value)}
-                      placeholder="e.g., Executive, Middle Management, Team Lead"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`level-desc-${index}`}>Description</Label>
+                
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-sm font-medium">Description</Label>
                     <Textarea
-                      id={`level-desc-${index}`}
                       value={level.description}
                       onChange={(e) => updateLevel(index, 'description', e.target.value)}
-                      placeholder="Describe this leadership level"
-                      rows={3}
+                      placeholder="Describe this leadership level..."
+                      className="min-h-[80px]"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`level-count-${index}`}>Estimated Number of Leaders</Label>
-                    <Select
-                      value={level.estimatedCount}
-                      onValueChange={(value) => updateLevel(index, 'estimatedCount', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select range" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {estimatedCountOptions.map(option => (
-                          <SelectItem key={option} value={option}>{option}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="mt-4 space-y-4">
-                  <div className="space-y-2">
-                    <Label>Key Competencies</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {competencies.map((comp) => (
-                        <div key={comp} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`comp-${comp}-${index}`}
-                            checked={level.competencies.includes(comp)}
-                            onCheckedChange={(checked) => {
-                              const newComps = checked
-                                ? [...level.competencies, comp]
-                                : level.competencies.filter(c => c !== comp);
-                              updateLevel(index, 'competencies', newComps);
-                            }}
-                          />
-                          <Label htmlFor={`comp-${comp}-${index}`} className="text-sm">{comp}</Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Development Needs</Label>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Key Competencies</Label>
                     <Textarea
-                      value={level.developmentNeeds.join(', ')}
-                      onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
-                      placeholder="Enter development needs, separated by commas"
-                      rows={3}
+                      value={level.competencies.join('\n')}
+                      onChange={(e) => updateLevel(index, 'competencies', e.target.value.split('\n').filter(c => c.trim()))}
+                      placeholder="Enter competencies, one per line..."
+                      className="min-h-[80px]"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Development Needs</Label>
+                    <Textarea
+                      value={level.developmentNeeds.join('\n')}
+                      onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split('\n').filter(c => c.trim()))}
+                      placeholder="Enter development needs, one per line..."
+                      className="min-h-[80px]"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Estimated Count</Label>
+                    <Input
+                      value={level.estimatedCount}
+                      onChange={(e) => updateLevel(index, 'estimatedCount', e.target.value)}
+                      placeholder="e.g., 5-10 leaders"
                     />
                   </div>
                 </div>
@@ -773,50 +705,46 @@ export default function AssessmentPageComponent({
   );
 
   const renderGeneratingProgram = () => (
-    <div className="text-center space-y-6">
-      <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center mx-auto">
-        <Loader2 className="h-8 w-8 text-white animate-spin" />
+    <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
+      <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto">
+        <Loader2 className="h-8 w-8 text-primary-foreground animate-spin" />
       </div>
-      <div>
-                    <h2 className="text-xl text-gray-900 mb-2">Generating Your Development Program</h2>
-        <p className="text-gray-600">Our AI is analyzing your assessment data and creating a personalized program</p>
+      <div className="text-center">
+        <h2 className="text-xl text-foreground mb-2">Generating Your Development Program</h2>
+        <p className="text-muted-foreground">Our AI is analyzing your assessment data and creating a personalized program</p>
       </div>
-
-      <div className="space-y-4">
+      
+      <div className="w-full max-w-md space-y-4">
         {aiSteps.map((step, index) => (
           <div
             key={index}
-            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-500 ${
+            className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-300 ${
               index <= aiStep
-                ? 'bg-gray-50 border border-gray-200'
-                : 'bg-gray-50 border border-gray-200 opacity-50'
+                ? 'bg-muted border border-border'
+                : 'bg-muted border border-border opacity-50'
             }`}
           >
-            <div className="flex-shrink-0">
+            <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
               {index < aiStep ? (
-                <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-white" />
-                </div>
-              ) : index === aiStep ? (
-                <div className="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                  <Loader2 className="w-4 h-4 text-white animate-spin" />
-                </div>
+                <CheckCircle className="h-4 w-4 text-primary-foreground" />
               ) : (
-                <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
+                <span className="text-primary-foreground text-xs font-medium">{index + 1}</span>
               )}
             </div>
-            <div className="flex-1 text-left">
-              <p className="text-sm text-gray-900">{step.message}</p>
+            <div className="flex-1">
+              <p className="text-sm text-foreground">{step.message}</p>
             </div>
           </div>
         ))}
       </div>
-
-      <div className="w-full bg-gray-200 rounded-full h-2">
-        <div
-          className="bg-gray-600 h-2 rounded-full transition-all duration-500"
-          style={{ width: `${aiProgress}%` }}
-        ></div>
+      
+      <div className="w-full max-w-md">
+        <div className="w-full bg-muted rounded-full h-2">
+          <div
+            className="bg-primary h-2 rounded-full transition-all duration-500"
+            style={{ width: `${aiProgress}%` }}
+          />
+        </div>
       </div>
     </div>
   );

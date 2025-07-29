@@ -1,23 +1,35 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { useLanguage } from '@/lib/language-context'
-import { handleAnchorClick } from '@/lib/utils'
 
 export function Header() {
   const { t } = useLanguage()
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white">
-      <div className="mx-4 md:mx-8">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-card' : ''
+    }`}>
+      <div className="mx-6 md:mx-12 lg:mx-16 xl:mx-20">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center text-foreground">
             <Link href="/">
-              <Image src="/elevate-logo.svg" alt="Elevate Logo" width={108} height={108} className="mr-2" />
+              <Logo width={108} height={108} className="mr-2" />
             </Link>
           </div>
 

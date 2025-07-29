@@ -49,12 +49,12 @@ const mockModules: (ProgramModule & { status: 'completed' | 'in-progress' | 'not
 const statusColor = {
   completed: 'text-green-600',
   'in-progress': 'text-blue-600',
-  'not-started': 'text-gray-400',
+  'not-started': 'text-muted-foreground',
 };
 const statusBg = {
-  completed: 'bg-green-100',
-  'in-progress': 'bg-blue-100',
-  'not-started': 'bg-gray-100',
+  completed: 'bg-green-100 dark:bg-green-900/20',
+  'in-progress': 'bg-blue-100 dark:bg-blue-900/20',
+  'not-started': 'bg-muted',
 };
 const statusLabel = {
   completed: 'Completed',
@@ -71,6 +71,24 @@ export default function ProgramPage() {
   // Sort modules by order
   const modules = [...mockModules].sort((a, b) => a.order - b.order);
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'text-green-600';
+      case 'in-progress': return 'text-blue-600';
+      case 'not-started': return 'text-muted-foreground';
+      default: return 'text-muted-foreground';
+    }
+  };
+
+  const getStatusBgColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'bg-green-100 dark:bg-green-900/20';
+      case 'in-progress': return 'bg-blue-100 dark:bg-blue-900/20';
+      case 'not-started': return 'bg-muted';
+      default: return 'bg-muted';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -79,8 +97,8 @@ export default function ProgramPage() {
         </CardHeader>
         <CardContent>
           {/* Timeline */}
-          <div className="relative flex items-center justify-between mb-8 mt-2">
-            <div className="absolute left-0 right-0 top-1/2 h-1 bg-gray-200 z-0" style={{ transform: 'translateY(-50%)' }} />
+          <div className="relative">
+            <div className="absolute left-0 right-0 top-1/2 h-1 bg-muted z-0" style={{ transform: 'translateY(-50%)' }} />
             {modules.map((module, idx) => {
               const Icon = statusIcon[module.status];
               return (

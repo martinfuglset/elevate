@@ -221,7 +221,7 @@ const mockLibraryModules = [
 
 export default function DevProgramTestPage() {
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
+    <div className="min-h-screen bg-background w-full">
       <AssessmentPageComponent 
         testMode={true}
         mockData={mockAssessmentData}

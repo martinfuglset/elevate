@@ -12,31 +12,31 @@ export function HeroSection() {
 
   return (
     <>
-      <section className="py-16 md:py-20 lg:py-24 w-full bg-transparent">
-        <div className="flex flex-col items-center text-center py-12 md:py-16 lg:py-20">
+      <section className="py-8 md:py-12 lg:py-16 w-full bg-transparent">
+        <div className="flex flex-col items-center text-center py-6 md:py-8 lg:py-10">
           {/* Badge with consistent styling */}
-          <div className="inline-flex items-center px-4 py-2 rounded-full mb-6 md:mb-8 bg-transparent">
-            <Sparkles className="h-4 w-4 text-black mr-2" />
-            <span className="text-sm text-black">AI-Powered Leadership Development</span>
+          <div className="inline-flex items-center px-4 py-2 rounded-full mb-4 md:mb-6 bg-transparent">
+            <Sparkles className="h-4 w-4 text-foreground mr-2" />
+            <span className="text-sm text-foreground font-mono">AI-Powered Leadership Development</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl text-black mb-4 md:mb-6 leading-tight font-medium tracking-tight">
-            Transform Leaders,<br />
+          <h1 className="text-4xl md:text-6xl lg:text-7xl text-foreground mb-3 md:mb-4 leading-tight font-semibold tracking-tight">
+            Transform Leaders<br />
             Transform Organizations
           </h1>
           
-          <p className="text-lg md:text-xl lg:text-2xl text-black mb-8 md:mb-10 max-w-2xl md:max-w-3xl leading-relaxed opacity-95">
+          <p className="text-lg md:text-xl lg:text-2xl text-foreground mb-6 md:mb-8 max-w-2xl md:max-w-3xl leading-relaxed opacity-95">
             {t('hero.subtitle')}
           </p>
           
           <div className="flex justify-center">
             <Button 
               size="lg" 
-              className="rounded-full bg-white text-black hover:bg-gray-100 transition-colors px-8 py-3 text-lg"
+              className="rounded-full bg-background text-foreground hover:bg-muted transition-colors px-8 py-3 text-lg border border-border"
               onClick={() => setIsAssessmentModalOpen(true)}
             >
               Take need analysis
-              <ArrowRight className="ml-2 h-5 w-5 text-black" />
+              <ArrowRight className="ml-2 h-5 w-5 text-foreground" />
             </Button>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { signIn } from '@/lib/auth'
+import { Logo } from '@/components/ui/logo'
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState('')
@@ -84,15 +85,9 @@ export default function SignupPage() {
           className="object-cover"
           priority
         />
-        <div className="relative z-10 flex items-center">
+        <div className="relative z-10 flex items-center text-foreground">
           <Link href="/" className="hover:opacity-80 transition-opacity">
-            <Image
-              src="/elevate-logo.svg"
-              alt="Elevate"
-              width={128}
-              height={128}
-              className="filter brightness-0 invert"
-            />
+            <Logo width={128} height={128} />
           </Link>
         </div>
       </div>

@@ -35,168 +35,111 @@ export default function DevelopmentProgram({ program, leaders = [], summary, onS
     <div className="space-y-8">
       <div className="text-center space-y-4">
         <h2 className="text-2xl font-semibold">Your Development Program</h2>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           Based on your assessment, we've created a personalized leadership development program.
         </p>
       </div>
 
-      {/* 1. AI Summary of Needs */}
-      {summary && (
-        <Card className="border-2 border-purple-500 bg-purple-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Sparkles className="h-5 w-5 text-purple-500" />
-              AI Summary of Needs
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 text-base whitespace-pre-line leading-relaxed">{summary}</p>
-          </CardContent>
-        </Card>
-      )}
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Program Summary</h3>
+          <p className="text-muted-foreground">
+            Based on your assessment, we've created a comprehensive development program tailored to your organization's needs.
+          </p>
+        </div>
 
-      {/* 2. Display/Overview of Different Levels */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Users className="h-5 w-5" />
-            Leadership Levels Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-muted/50 p-4 rounded-lg">
+          <h4 className="font-medium mb-2">Executive Summary</h4>
+          <p className="text-foreground text-base whitespace-pre-line leading-relaxed">{summary}</p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Leadership Levels</h3>
+          <div className="space-y-4">
             {leaders.map((leader, index) => (
-              <div 
-                key={leader.id} 
-                className={`p-4 border rounded-lg transition-all duration-200 hover:shadow-md ${
+              <div
+                key={index}
+                className={`p-4 border-l-4 rounded-r-lg ${
                   index === 0 
-                    ? 'border-blue-600 bg-blue-50' 
-                    : 'border-gray-200 bg-white'
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-border bg-card'
                 }`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-gray-900">{leader.name}</h4>
-                  {index === 0 && (
-                    <Badge className="bg-blue-600 text-white text-xs">
-                      Priority
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-sm text-gray-600 mb-2">{leader.description}</p>
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge variant="outline" className="text-xs">
-                    {leader.estimatedCount} leaders
-                  </Badge>
-                </div>
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs font-medium text-gray-700 mb-1">Key Competencies:</p>
+                <h4 className="font-medium text-foreground">{leader.name}</h4>
+                <p className="text-sm text-muted-foreground mb-2">{leader.description}</p>
+                
+                {leader.keyCompetencies && leader.keyCompetencies.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-xs font-medium text-foreground mb-1">Key Competencies:</p>
                     <div className="flex flex-wrap gap-1">
-                      {leader.competencies?.slice(0, 3).map((comp: string) => (
-                        <Badge key={comp} variant="secondary" className="text-xs">
+                      {leader.keyCompetencies.map((comp: string, compIndex: number) => (
+                        <span
+                          key={compIndex}
+                          className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
+                        >
                           {comp}
-                        </Badge>
+                        </span>
                       ))}
-                      {leader.competencies?.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{leader.competencies.length - 3} more
-                        </Badge>
-                      )}
                     </div>
                   </div>
+                )}
+                
+                {leader.developmentNeeds && leader.developmentNeeds.length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-gray-700 mb-1">Development Needs:</p>
-                    <p className="text-xs text-gray-600">{leader.developmentNeeds?.join(', ')}</p>
+                    <p className="text-xs font-medium text-foreground mb-1">Development Needs:</p>
+                    <p className="text-xs text-muted-foreground">{leader.developmentNeeds?.join(', ')}</p>
                   </div>
-                </div>
+                )}
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* 3. AI Generated Strategic Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Target className="h-5 w-5" />
-            Strategic Recommendations
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Key Recommendations</h3>
+          <div className="space-y-3">
             {program.recommendations.map((rec, index) => (
-              <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-xs font-medium">{index + 1}</span>
-                </div>
-                <div>
-                  <p className="text-gray-700">{rec}</p>
-                </div>
+              <div key={index} className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
+                <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-foreground">{rec}</p>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* 4. Suggested Program (Learning Modules) */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <BookOpen className="h-5 w-5" />
-              Suggested Learning Program
-            </CardTitle>
-            <div className="flex gap-4">
-              <div className="text-center">
-                <div className="text-lg font-semibold text-gray-700">{program.modules.length}</div>
-                <div className="text-xs text-gray-500">Modules</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-gray-700">{program.summary.timeline}</div>
-                <div className="text-xs text-gray-500">Timeline</div>
-              </div>
-            </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="text-center p-4 bg-muted/30 rounded-lg">
+            <div className="text-lg font-semibold text-foreground">{program.modules.length}</div>
+            <div className="text-xs text-muted-foreground">Modules</div>
           </div>
-        </CardHeader>
-        <CardContent>
+          <div className="text-center p-4 bg-muted/30 rounded-lg">
+            <div className="text-lg font-semibold text-foreground">{program.summary.timeline}</div>
+            <div className="text-xs text-muted-foreground">Timeline</div>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Development Modules</h3>
           <div className="space-y-4">
             {program.modules.map((module, index) => (
-              <div 
-                key={module.id} 
-                className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+              <div
+                key={index}
+                className="p-4 border border-border rounded-lg hover:shadow-md transition-all duration-200"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">{index + 1}</span>
-                      </div>
-                      <h3 className="font-medium text-gray-900">{module.title}</h3>
-                    </div>
-                    <p className="text-gray-600 mb-3 ml-11">{module.description}</p>
-                    <div className="flex items-center gap-3 ml-11">
-                      <Badge variant="outline" className="text-xs">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {module.duration}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {module.level}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {module.category}
-                      </Badge>
-                    </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-primary-foreground text-sm font-medium">{index + 1}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                  <div className="flex-1">
+                    <h3 className="font-medium text-foreground">{module.title}</h3>
+                    <p className="text-muted-foreground mb-3 ml-11">{module.description}</p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Next Steps */}
       <Card>

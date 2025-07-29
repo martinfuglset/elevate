@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -43,7 +43,7 @@ export function Sidebar() {
       <div className="hidden border-r bg-muted/40 md:flex md:flex-col md:w-64">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <div className="flex items-center">
-            <Image src="/elevate-logo.svg" alt="Elevate Logo" width={96} height={96} />
+            <Logo />
           </div>
           <div className="ml-auto">
             <Button
@@ -86,10 +86,10 @@ export function Sidebar() {
           isCollapsed ? "justify-center px-2" : "px-4 lg:px-6"
         )}>
           <Link href="/" className={cn(
-            "flex items-center transition-all duration-300 overflow-hidden",
+            "flex items-center transition-all duration-300 overflow-hidden text-foreground",
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
           )}>
-            <Image src="/elevate-logo.svg" alt="Elevate Logo" width={96} height={96} className="transition-all duration-300" />
+            <Logo />
           </Link>
           <div className={cn(
             "transition-all duration-300",
