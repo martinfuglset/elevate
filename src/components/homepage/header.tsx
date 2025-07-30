@@ -24,22 +24,22 @@ export function Header() {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled ? 'bg-card' : ''
     }`}>
-      <div className="mx-6 md:mx-12 lg:mx-16 xl:mx-20">
-        <div className="flex items-center justify-between h-20">
+      <div className="mx-3 sm:mx-6 md:mx-12 lg:mx-16 xl:mx-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <div className="flex items-center text-foreground">
             <Link href="/">
-              <Logo width={108} height={108} className="mr-2" />
+              <Logo width={80} height={80} className="sm:w-[108px] sm:h-[108px] mr-2" />
             </Link>
           </div>
 
           {/* Language Switcher and CTA */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2">
             <LanguageSwitcher />
-            <Button asChild variant="outline" size="sm">
+            <Button asChild variant="outline" size="sm" className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
               <Link href="/login">{t('nav.login')}</Link>
             </Button>
-            <Button asChild variant="default" size="sm">
+            <Button asChild variant="default" size="sm" className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2">
               <Link href="/signup">{t('nav.signup')}</Link>
             </Button>
           </div>

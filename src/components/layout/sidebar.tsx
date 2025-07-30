@@ -43,7 +43,7 @@ export function Sidebar() {
       <div className="hidden border-r bg-muted/40 md:flex md:flex-col md:w-64">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <div className="flex items-center">
-            <Logo />
+            <Logo width={80} height={80} />
           </div>
           <div className="ml-auto">
             <Button
@@ -89,7 +89,7 @@ export function Sidebar() {
             "flex items-center transition-all duration-300 overflow-hidden text-foreground",
             isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
           )}>
-            <Logo />
+            <Logo width={80} height={80} />
           </Link>
           <div className={cn(
             "transition-all duration-300",

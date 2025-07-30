@@ -42,6 +42,12 @@ const translations = {
     'features.results.description': 'Track leadership growth across your organization with data-driven insights and proven development methodologies.',
     'features.coaching.title': 'Executive Development Tools',
     'features.coaching.description': 'Access proven frameworks, coaching resources, and development plans tailored for each leader in your organization.',
+    'features.analytics.title': 'Leadership Analytics',
+    'features.analytics.description': 'Comprehensive dashboards and reports to track leadership effectiveness, team performance, and organizational impact.',
+    'features.community.title': 'Peer Learning Network',
+    'features.community.description': 'Connect leaders across your organization for peer coaching, knowledge sharing, and collaborative development.',
+    'features.compliance.title': 'Compliance & Certification',
+    'features.compliance.description': 'Ensure your leadership development programs meet industry standards and regulatory requirements with built-in compliance tracking.',
     
     // Stats Section
     'stats.title': 'Trusted by businesses worldwide',

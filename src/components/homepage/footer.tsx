@@ -29,29 +29,29 @@ export function Footer() {
 
   return (
     <footer className="pt-4 pb-6 w-full">
-      <div className="bg-card rounded-3xl p-6 md:p-8 border border-border mx-3 md:mx-6">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mx-2 sm:mx-3 md:mx-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8">
           {/* Company Info */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center mb-6 text-foreground">
+          <div className="col-span-1 sm:col-span-2 md:col-span-2">
+            <div className="flex items-center mb-4 sm:mb-6 text-foreground">
               <Link href="/">
                 <Logo />
               </Link>
             </div>
-            <p className="text-foreground mb-6 max-w-md leading-relaxed">
+            <p className="text-sm sm:text-base text-foreground mb-4 sm:mb-6 max-w-md leading-relaxed">
               {t('footer.description')}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg text-foreground mb-4">{t('footer.product.title')}</h3>
-            <ul className="space-y-3">
+            <h3 className="text-base sm:text-lg text-foreground mb-3 sm:mb-4">{t('footer.product.title')}</h3>
+            <ul className="space-y-2 sm:space-y-3">
               {productLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-foreground hover:text-muted-foreground transition-colors link-underline"
+                    className="text-sm sm:text-base text-foreground hover:text-muted-foreground transition-colors link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -63,13 +63,13 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-lg text-foreground mb-4">{t('footer.company.title')}</h3>
-            <ul className="space-y-3">
+            <h3 className="text-base sm:text-lg text-foreground mb-3 sm:mb-4">{t('footer.company.title')}</h3>
+            <ul className="space-y-2 sm:space-y-3">
               {companyLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-foreground hover:text-muted-foreground transition-colors link-underline"
+                    className="text-sm sm:text-base text-foreground hover:text-muted-foreground transition-colors link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -81,13 +81,13 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-lg text-foreground mb-4">{t('footer.legal.title')}</h3>
-            <ul className="space-y-3">
+            <h3 className="text-base sm:text-lg text-foreground mb-3 sm:mb-4">{t('footer.legal.title')}</h3>
+            <ul className="space-y-2 sm:space-y-3">
               {legalLinks.map((link) => (
                 <li key={link.label}>
                   <Link 
                     href={link.href} 
-                    className="text-foreground hover:text-muted-foreground transition-colors link-underline"
+                    className="text-sm sm:text-base text-foreground hover:text-muted-foreground transition-colors link-underline"
                     onClick={(e) => handleAnchorClick(link.href, e)}
                   >
                     {link.label}
@@ -99,8 +99,8 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-border">
-          <p className="text-foreground text-sm text-center font-normal">
+        <div className="mt-6 sm:mt-8 pt-6 sm:pt-8">
+          <p className="text-xs sm:text-sm text-foreground text-center font-normal">
             © {new Date().getFullYear()} Elevate. All rights reserved.
           </p>
         </div>

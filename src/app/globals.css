@@ -145,6 +145,23 @@
     background: transparent;
     min-height: 100vh;
   }
+  
+  /* Remove background graphics for dashboard layout */
+  body.dashboard-active html::before,
+  body.dashboard-active html::after {
+    display: none !important;
+    opacity: 0 !important;
+    background: none !important;
+  }
+  
+  /* Alternative: Add solid background to dashboard layout */
+  body.dashboard-active {
+    background: hsl(var(--background)) !important;
+  }
+  
+  body.dashboard-active .flex.h-screen {
+    background: hsl(var(--background)) !important;
+  }
 }
 
 /* Hero Section Animations */
@@ -887,6 +904,41 @@
   0% { transform: translateY(0); }
   50% { transform: translateY(10px); }
   100% { transform: translateY(0); }
+}
+
+/* Gradient animations for hero button */
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradient-x-reverse {
+  0% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 1.5s ease infinite;
+}
+
+.animate-gradient-x-reverse {
+  background-size: 200% 200%;
+  animation: gradient-x-reverse 1.5s ease infinite;
 }
 
 /* Badge animations */

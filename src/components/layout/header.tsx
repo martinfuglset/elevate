@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { mainNavItems, allPages } from '@/lib/navigation'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/lib/sidebar-context'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
+
 
 export function Header({ className }: { className?: string }) {
   const pathname = usePathname()
@@ -79,8 +79,7 @@ export function Header({ className }: { className?: string }) {
         </h1>
       </div>
 
-      {/* Theme toggle */}
-      <ThemeToggle />
+
     </header>
   )
 } 
