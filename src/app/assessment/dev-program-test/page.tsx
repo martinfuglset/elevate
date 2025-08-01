@@ -17,16 +17,23 @@ const mockAssessmentData = {
     departments: ['Sales', 'Engineering/Technology', 'Human Resources'],
     assessmentFocus: ['Leadership Development', 'Succession Planning', 'Strategic Alignment']
   },
-  levels: [
+  targetGroups: [
     {
-      id: 'level1',
+      id: 'targetGroup1',
       name: 'Senior Leader',
       description: 'Experienced leaders responsible for strategic direction.',
-      competencies: ['Strategic Thinking', 'Change Management'],
       developmentNeeds: ['Digital Transformation'],
-      estimatedCount: '2'
+      otherDevelopmentNeeds: '',
+      estimatedCount: '2',
+      preferredLearningStyle: ['In-person Workshops', 'Individual Coaching'],
+      otherLearningStyles: '',
+      programIntensity: 'Modular Program (spread over time)'
     }
   ],
+  programReasons: {
+    reasons: ['Succession Planning', 'Performance Improvement'],
+    otherReasons: ''
+  },
   leaders: [
     {
       id: 'l1',

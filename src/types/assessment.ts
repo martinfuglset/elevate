@@ -11,13 +11,17 @@
 //   priority: 'high' | 'medium' | 'low';
 // }
 
-export interface Level {
+export interface TargetGroup {
   id: string;
   name: string;
   description: string;
-  competencies: string[];
   developmentNeeds: string[];
+  otherDevelopmentNeeds: string;
   estimatedCount: string;
+  preferredLearningStyle: string[];
+  otherLearningStyles: string;
+  programIntensity: string;
+  timeline: string;
 }
 
 export interface AssessmentData {
@@ -34,18 +38,18 @@ export interface AssessmentData {
     departments: string[];
     assessmentFocus: string[];
   };
-  levels: Level[];
+  targetGroups: TargetGroup[];
+  programReasons: {
+    reasons: string[];
+    otherReasons: string;
+    additionalContext: string;
+  };
   organizationalGaps: {
     missingSkills: string[];
     successionGaps: string[];
     strategicAlignment: string;
   };
-  developmentPlan: {
-    priorityLevels: string[];
-    timeline: string;
-    budget: string;
-    successMetrics: string;
-  };
+
 }
 
 export interface ValidationErrors {

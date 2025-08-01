@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const {
       assessorInfo,
       organizationScope,
-      levels,
+      targetGroups,
       organizationalGaps,
       developmentPlan
     } = body
@@ -24,9 +24,9 @@ Assessment Context:
 - Organization Scope: ${organizationScope?.totalLeaders || 0} leaders across ${organizationScope?.departments?.join(', ') || 'various departments'}
 - Assessment Focus: ${organizationScope?.assessmentFocus?.join(', ') || 'leadership development'}
 
-Leadership Levels Analysis:
-- Total Levels Assessed: ${levels?.length || 0}
-- Levels Breakdown: ${levels?.map((level: any, index: number) => `${level.name || `Level ${index + 1}`} (${level.estimatedCount || 'N/A'} leaders)`).join(', ') || 'No levels defined'}
+Target Groups Analysis:
+- Total Target Groups Assessed: ${targetGroups?.length || 0}
+- Target Groups Breakdown: ${targetGroups?.map((targetGroup: any, index: number) => `${targetGroup.name || `Target Group ${index + 1}`} (${targetGroup.estimatedCount || 'N/A'} leaders)`).join(', ') || 'No target groups defined'}
 
 Critical Organizational Gaps:
 ${organizationalGaps?.missingSkills?.map((skill: string) => `- ${skill}`).join('\n') || '- No specific skills gaps identified'}

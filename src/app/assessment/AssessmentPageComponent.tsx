@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { 
   ClipboardList, 
@@ -26,7 +27,8 @@ import {
   Trash2,
   Building2,
   Users,
-  Briefcase
+  Briefcase,
+  Info
 } from 'lucide-react';
 import DevelopmentProgram from '@/components/assessment/DevelopmentProgram';
 import { 
@@ -35,7 +37,7 @@ import {
   ProgramModule, 
   GeneratedProgram, 
   AssessmentPageProps,
-  Level
+  TargetGroup
 } from '@/types/assessment';
 
 
@@ -49,22 +51,22 @@ const initialData: AssessmentData = {
     industry: ''
   },
   organizationScope: {
-    totalLeaders: 0, // This will be automatically calculated from levels array
+    totalLeaders: 0, // This will be automatically calculated from targetGroups array
     departments: [],
     assessmentFocus: []
   },
-  levels: [],
+  targetGroups: [],
+  programReasons: {
+    reasons: [],
+    otherReasons: '',
+    additionalContext: ''
+  },
   organizationalGaps: {
     missingSkills: [],
     successionGaps: [],
     strategicAlignment: ''
   },
-  developmentPlan: {
-    priorityLevels: [],
-    timeline: '',
-    budget: '',
-    successMetrics: ''
-  }
+
 };
 
 const companySizes = [
@@ -135,22 +137,94 @@ const estimatedCountOptions = [
   '100+'
 ];
 
-const mockLevels: Level[] = [
+const learningStyleOptions = [
+  'In-person Workshops',
+  'Digital Workshops',
+  'Individual Coaching',
+  'On-the-job Assignments',
+  'E-learning',
+  'Presentations',
+  'Case Studies',
+  'Simulations',
+  'Peer Learning',
+  'Self-paced Modules',
+  'Blended Learning',
+  'Other'
+];
+
+const programIntensityOptions = [
   {
-    id: 'level1',
-    name: 'Executive',
-    description: 'Top-level leaders responsible for overall strategy and direction.',
-    competencies: ['Strategic Thinking', 'Decision Making'],
-    developmentNeeds: ['Change Management'],
-    estimatedCount: '1-5',
+    value: 'Modular Program (spread over time)',
+    label: 'Modular Program (spread over time)',
+    description: 'Learning sessions spread over several weeks or months'
   },
   {
-    id: 'level2',
+    value: 'Intensive Experience (bootcamp/retreat)',
+    label: 'Intensive Experience (bootcamp/retreat)',
+    description: 'Concentrated learning experience over a few days or weeks'
+  },
+  {
+    value: 'Hybrid Approach (combination of both)',
+    label: 'Hybrid Approach (combination of both)',
+    description: 'Mix of modular and intensive learning experiences'
+  }
+];
+
+const developmentNeedsOptions = [
+  'Strategic Thinking',
+  'Communication Skills',
+  'Team Building',
+  'Decision Making',
+  'Change Management',
+  'Emotional Intelligence',
+  'Innovation & Creativity',
+  'Coaching & Mentoring',
+  'Conflict Resolution',
+  'Business Acumen',
+  'Digital Transformation',
+  'Data-Driven Decision Making',
+  'Cross-functional Collaboration',
+  'Performance Management',
+  'Other'
+];
+
+const programReasonsOptions = [
+  'Performance Improvement',
+  'Leadership Pipeline Development',
+  'Change Management Support',
+  'Strategic Alignment',
+  'Team Effectiveness',
+  'Innovation & Growth',
+  'Cultural Development',
+  'Culture Change',
+  'Improved Employee Experience and Retention',
+  'Other'
+];
+
+const mockTargetGroups: TargetGroup[] = [
+  {
+    id: 'targetGroup1',
+    name: 'Executive',
+    description: 'Top-level leaders responsible for overall strategy and direction.',
+    developmentNeeds: ['Change Management'],
+    otherDevelopmentNeeds: '',
+    estimatedCount: '1-5',
+    preferredLearningStyle: ['In-person Workshops'],
+    otherLearningStyles: '',
+    programIntensity: 'Modular Program (spread over time)',
+    timeline: '6',
+  },
+  {
+    id: 'targetGroup2',
     name: 'Middle Management',
     description: 'Managers overseeing teams and translating strategy into action.',
-    competencies: ['Team Building', 'Communication'],
     developmentNeeds: ['Innovation'],
+    otherDevelopmentNeeds: '',
     estimatedCount: '6-10',
+    preferredLearningStyle: ['E-learning'],
+    otherLearningStyles: '',
+    programIntensity: 'Hybrid Approach (combination of both)',
+    timeline: '12',
   },
 ];
 
@@ -206,11 +280,10 @@ export default function AssessmentPageComponent({
       if (!data.assessorInfo.company.trim()) errors.assessorInfo = [...(errors.assessorInfo || []), 'Company is required'];
     }
     if (step === 2) {
-      if (data.organizationScope.departments.length === 0) errors.organizationScope = [...(errors.organizationScope || []), 'At least one department must be selected'];
-      // Add any other validation for organizationalGaps or developmentPlan if needed
+      // Add any validation for organizationalGaps or developmentPlan if needed
     }
     if (step === 3) {
-      if (data.levels.length === 0) errors.levels = [...(errors.levels || []), 'At least one level must be added'];
+      if (data.targetGroups.length === 0) errors.targetGroups = [...(errors.targetGroups || []), 'At least one target group must be added'];
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -267,14 +340,14 @@ export default function AssessmentPageComponent({
 
   const generateProgram = (assessmentData: AssessmentData): GeneratedProgram => {
     // Mock program generation logic
-    const totalLeaders = assessmentData.levels.reduce((sum, lvl) => {
-      const count = typeof lvl.estimatedCount === 'string'
-        ? parseInt(lvl.estimatedCount.split('-')[0]) || 0
+    const totalLeaders = assessmentData.targetGroups.reduce((sum: number, targetGroup: TargetGroup) => {
+      const count = typeof targetGroup.estimatedCount === 'string'
+        ? parseInt(targetGroup.estimatedCount.split('-')[0]) || 0
         : 0;
       return sum + count;
     }, 0);
-    const priorityLevels = assessmentData.developmentPlan.priorityLevels.length;
-    const keyGaps = Array.from(new Set(assessmentData.levels.flatMap(lvl => lvl.developmentNeeds)));
+    const priorityLevels = assessmentData.targetGroups.length;
+    const keyGaps = Array.from(new Set(assessmentData.targetGroups.flatMap((targetGroup: TargetGroup) => targetGroup.developmentNeeds)));
     // Update the totalLeaders in organizationScope to reflect the actual count
     setData(prev => ({
       ...prev,
@@ -338,92 +411,141 @@ export default function AssessmentPageComponent({
     };
   };
 
-  // --- LEVELS LOGIC ---
-  const addLevel = () => {
-    const newLevel: Level = {
-      id: `level${data.levels.length + 1}`,
+  // --- TARGET GROUPS LOGIC ---
+  const addTargetGroup = () => {
+    const newTargetGroup: TargetGroup = {
+      id: `targetGroup${data.targetGroups.length + 1}`,
       name: '',
       description: '',
-      competencies: [],
       developmentNeeds: [],
+      otherDevelopmentNeeds: '',
       estimatedCount: '1-5',
+      preferredLearningStyle: [],
+      otherLearningStyles: '',
+      programIntensity: '',
+      timeline: '6',
     };
     setData(prev => ({
       ...prev,
-      levels: [...prev.levels, newLevel]
+      targetGroups: [...prev.targetGroups, newTargetGroup]
     }));
   };
 
-  const updateLevel = (index: number, field: keyof Level, value: any) => {
+  const updateTargetGroup = (index: number, field: keyof TargetGroup, value: any) => {
     setData(prev => ({
       ...prev,
-      levels: prev.levels.map((level, i) => 
-        i === index ? { ...level, [field]: value } : level
+      targetGroups: prev.targetGroups.map((targetGroup, i) => 
+        i === index ? { ...targetGroup, [field]: value } : targetGroup
       )
     }));
   };
 
-  const removeLevel = (index: number) => {
+  const removeTargetGroup = (index: number) => {
     setData(prev => ({
       ...prev,
-      levels: prev.levels.filter((_, i) => i !== index)
+      targetGroups: prev.targetGroups.filter((_, i) => i !== index)
     }));
   };
 
   // Sortable item
-  function renderLevel({ level, index }: { level: Level; index: number }) {
+  function renderTargetGroup({ targetGroup, index }: { targetGroup: TargetGroup; index: number }) {
     return (
       <Card className={`p-4 border-l-4 ${index === 0 ? 'border-primary' : 'border-border'} transition-all duration-200 bg-card flex flex-col gap-2`}>
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">{level.name}</h3>
+          <h3 className="text-lg font-semibold">{targetGroup.name}</h3>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => removeLevel(index)}
+            onClick={() => removeTargetGroup(index)}
             className="text-destructive hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
         
-        <div className="space-y-3">
-          <div>
-            <Label className="text-sm font-medium">Description</Label>
-            <Textarea
-              value={level.description}
-              onChange={(e) => updateLevel(index, 'description', e.target.value)}
-              placeholder="Describe this leadership level..."
-              className="min-h-[80px]"
-            />
-          </div>
+                        <div className="space-y-3">
+                  <div>
+                    <Label className="text-sm font-medium">Name</Label>
+                    <Input
+                      value={targetGroup.name}
+                      onChange={(e) => updateTargetGroup(index, 'name', e.target.value)}
+                      placeholder="Enter target group name (e.g., Executive, Middle Management)"
+                      className="h-11"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Description</Label>
+                    <Textarea
+                      value={targetGroup.description}
+                      onChange={(e) => updateTargetGroup(index, 'description', e.target.value)}
+                      placeholder="Describe this target group..."
+                      className="min-h-[80px]"
+                    />
+                  </div>
           
-          <div>
-            <Label className="text-sm font-medium">Key Competencies</Label>
-            <Textarea
-              value={level.competencies.join('\n')}
-              onChange={(e) => updateLevel(index, 'competencies', e.target.value.split('\n').filter(c => c.trim()))}
-              placeholder="Enter competencies, one per line..."
-              className="min-h-[80px]"
-            />
-          </div>
+
           
           <div>
             <Label className="text-sm font-medium">Development Needs</Label>
-            <Textarea
-              value={level.developmentNeeds.join('\n')}
-              onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split('\n').filter(c => c.trim()))}
-              placeholder="Enter development needs, one per line..."
-              className="min-h-[80px]"
-            />
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {developmentNeedsOptions.map((need) => (
+                  <div key={need} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`${targetGroup.id}-${need}`}
+                      checked={targetGroup.developmentNeeds.includes(need)}
+                      onCheckedChange={(checked) => {
+                        const newNeeds = checked
+                          ? [...targetGroup.developmentNeeds, need]
+                          : targetGroup.developmentNeeds.filter(n => n !== need);
+                        updateTargetGroup(index, 'developmentNeeds', newNeeds);
+                      }}
+                    />
+                    <Label htmlFor={`${targetGroup.id}-${need}`} className="text-sm">{need}</Label>
+                  </div>
+                ))}
+              </div>
+              
+              {targetGroup.developmentNeeds.includes('Other') && (
+                <div className="mt-3">
+                  <Label className="text-sm font-medium">Other Development Needs</Label>
+                  <Textarea
+                    value={targetGroup.otherDevelopmentNeeds}
+                    onChange={(e) => updateTargetGroup(index, 'otherDevelopmentNeeds', e.target.value)}
+                    placeholder="Please specify other development needs..."
+                    className="min-h-[80px]"
+                  />
+                </div>
+              )}
+              
+              {targetGroup.developmentNeeds.length > 0 && (
+                <div className="mt-3">
+                  <Label className="text-sm font-medium">Selected Needs:</Label>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {targetGroup.developmentNeeds.map((need) => (
+                      <Badge key={need} variant="secondary" className="text-xs">
+                        {need}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           
           <div>
             <Label className="text-sm font-medium">Estimated Count</Label>
-            <Input
-              value={level.estimatedCount}
-              onChange={(e) => updateLevel(index, 'estimatedCount', e.target.value)}
-              placeholder="e.g., 5-10 leaders"
-            />
+            <Select value={targetGroup.estimatedCount} onValueChange={(value) => updateTargetGroup(index, 'estimatedCount', value)}>
+              <SelectTrigger className="h-11">
+                <SelectValue placeholder="Select estimated count" />
+              </SelectTrigger>
+              <SelectContent>
+                {estimatedCountOptions.map(option => (
+                  <SelectItem key={option} value={option}>{option}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </Card>
@@ -485,7 +607,7 @@ export default function AssessmentPageComponent({
               },
               { 
                 value: 'hr-leader', 
-                label: 'HR Leader', 
+                label: 'HR', 
                 description: 'Human resources professional',
                 icon: Users
               },
@@ -494,6 +616,12 @@ export default function AssessmentPageComponent({
                 label: 'Consultant', 
                 description: 'External advisor or consultant',
                 icon: Briefcase
+              },
+              { 
+                value: 'other', 
+                label: 'Other', 
+                description: 'Other role or position',
+                icon: Users
               }
             ].map((role) => {
               const IconComponent = role.icon;
@@ -613,27 +741,35 @@ export default function AssessmentPageComponent({
     </div>
   );
 
-  function renderLevels() {
+  function renderTargetGroups() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Leadership Levels</h3>
-          <Button onClick={addLevel} size="sm" className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold">Target Groups</h3>
+          <Button onClick={addTargetGroup} size="sm" className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
-            Add Level
+            Add Target Group
           </Button>
         </div>
         
+        {/* Info Message */}
+        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-blue-800">
+            What are the different target groups you would like to develop? E.g. new leaders, operational leaders or leaders at a certain hierarchical level.
+          </p>
+        </div>
+        
         <div className="space-y-4">
-          {data.levels.map((level, index) => (
-            <div key={level.id} className="relative">
+          {data.targetGroups.map((targetGroup, index) => (
+            <div key={targetGroup.id} className="relative">
               <Card className={`p-4 border-l-4 ${index === 0 ? 'border-primary' : 'border-border'} transition-all duration-200 bg-card flex flex-col gap-2`}>
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{level.name}</h3>
+                  <h3 className="text-lg font-semibold">{targetGroup.name || 'Untitled Target Group'}</h3>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeLevel(index)}
+                    onClick={() => removeTargetGroup(index)}
                     className="text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -642,42 +778,181 @@ export default function AssessmentPageComponent({
                 
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-sm font-medium">Description</Label>
-                    <Textarea
-                      value={level.description}
-                      onChange={(e) => updateLevel(index, 'description', e.target.value)}
-                      placeholder="Describe this leadership level..."
-                      className="min-h-[80px]"
+                    <Label className="text-sm font-medium">Name</Label>
+                    <Input
+                      value={targetGroup.name}
+                      onChange={(e) => updateTargetGroup(index, 'name', e.target.value)}
+                      placeholder="Enter target group name (e.g., Executive, Middle Management)"
+                      className="h-11"
                     />
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium">Key Competencies</Label>
+                    <Label className="text-sm font-medium">Description</Label>
                     <Textarea
-                      value={level.competencies.join('\n')}
-                      onChange={(e) => updateLevel(index, 'competencies', e.target.value.split('\n').filter(c => c.trim()))}
-                      placeholder="Enter competencies, one per line..."
+                      value={targetGroup.description}
+                      onChange={(e) => updateTargetGroup(index, 'description', e.target.value)}
+                      placeholder="Describe this target group..."
                       className="min-h-[80px]"
                     />
                   </div>
+                  
+
                   
                   <div>
                     <Label className="text-sm font-medium">Development Needs</Label>
-                    <Textarea
-                      value={level.developmentNeeds.join('\n')}
-                      onChange={(e) => updateLevel(index, 'developmentNeeds', e.target.value.split('\n').filter(c => c.trim()))}
-                      placeholder="Enter development needs, one per line..."
-                      className="min-h-[80px]"
-                    />
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {developmentNeedsOptions.map((need) => (
+                          <div key={need} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`${targetGroup.id}-${need}`}
+                              checked={targetGroup.developmentNeeds.includes(need)}
+                              onCheckedChange={(checked) => {
+                                const newNeeds = checked
+                                  ? [...targetGroup.developmentNeeds, need]
+                                  : targetGroup.developmentNeeds.filter(n => n !== need);
+                                updateTargetGroup(index, 'developmentNeeds', newNeeds);
+                              }}
+                            />
+                            <Label htmlFor={`${targetGroup.id}-${need}`} className="text-sm">{need}</Label>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {targetGroup.developmentNeeds.includes('Other') && (
+                        <div className="mt-3">
+                          <Label className="text-sm font-medium">Other Development Needs</Label>
+                          <Textarea
+                            value={targetGroup.otherDevelopmentNeeds}
+                            onChange={(e) => updateTargetGroup(index, 'otherDevelopmentNeeds', e.target.value)}
+                            placeholder="Please specify other development needs..."
+                            className="min-h-[80px]"
+                          />
+                        </div>
+                      )}
+                      
+                      {targetGroup.developmentNeeds.length > 0 && (
+                        <div className="mt-3">
+                          <Label className="text-sm font-medium">Selected Needs:</Label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {targetGroup.developmentNeeds.map((need) => (
+                              <Badge key={need} variant="secondary" className="text-xs">
+                                {need}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
                   <div>
                     <Label className="text-sm font-medium">Estimated Count</Label>
-                    <Input
-                      value={level.estimatedCount}
-                      onChange={(e) => updateLevel(index, 'estimatedCount', e.target.value)}
-                      placeholder="e.g., 5-10 leaders"
-                    />
+                    <Select value={targetGroup.estimatedCount} onValueChange={(value) => updateTargetGroup(index, 'estimatedCount', value)}>
+                      <SelectTrigger className="h-11">
+                        <SelectValue placeholder="Select estimated count" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {estimatedCountOptions.map(option => (
+                          <SelectItem key={option} value={option}>{option}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Preferred Learning Style</Label>
+                    <p className="text-xs text-muted-foreground mb-3">Select the learning formats and methods that work best for this target group</p>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {learningStyleOptions.map((style) => (
+                          <div key={style} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`${targetGroup.id}-learning-${style}`}
+                              checked={targetGroup.preferredLearningStyle.includes(style)}
+                              onCheckedChange={(checked) => {
+                                const newStyles = checked
+                                  ? [...targetGroup.preferredLearningStyle, style]
+                                  : targetGroup.preferredLearningStyle.filter(s => s !== style);
+                                updateTargetGroup(index, 'preferredLearningStyle', newStyles);
+                              }}
+                            />
+                            <Label htmlFor={`${targetGroup.id}-learning-${style}`} className="text-sm">{style}</Label>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {targetGroup.preferredLearningStyle.includes('Other') && (
+                        <div className="mt-3">
+                          <Label className="text-sm font-medium">Other Learning Styles</Label>
+                          <Textarea
+                            value={targetGroup.otherLearningStyles || ''}
+                            onChange={(e) => updateTargetGroup(index, 'otherLearningStyles', e.target.value)}
+                            placeholder="Please specify other learning styles..."
+                            className="min-h-[80px]"
+                          />
+                        </div>
+                      )}
+                      
+                      {targetGroup.preferredLearningStyle.length > 0 && (
+                        <div className="mt-3">
+                          <Label className="text-sm font-medium">Selected Learning Styles:</Label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {targetGroup.preferredLearningStyle.map((style) => (
+                              <Badge key={style} variant="secondary" className="text-xs">
+                                {style}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Program Intensity Preference</Label>
+                    <div className="space-y-3">
+                      <RadioGroup 
+                        value={targetGroup.programIntensity} 
+                        onValueChange={(value) => updateTargetGroup(index, 'programIntensity', value)}
+                      >
+                        {programIntensityOptions.map((option) => (
+                          <div key={option.value} className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-muted/50">
+                            <RadioGroupItem value={option.value} id={`${targetGroup.id}-intensity-${option.value}`} className="mt-1" />
+                            <div className="flex-1">
+                              <Label htmlFor={`${targetGroup.id}-intensity-${option.value}`} className="text-sm font-medium cursor-pointer">
+                                {option.label}
+                              </Label>
+                              <p className="text-xs text-muted-foreground mt-1">{option.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium">Timeline: {targetGroup.timeline || '6'} months</Label>
+                    <div className="space-y-2">
+                      <input
+                        type="range"
+                        min="3"
+                        max="18"
+                        step="3"
+                        value={targetGroup.timeline || '6'}
+                        onChange={(e) => updateTargetGroup(index, 'timeline', e.target.value)}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>3 months</span>
+                        <span>6 months</span>
+                        <span>9 months</span>
+                        <span>12 months</span>
+                        <span>15 months</span>
+                        <span>18 months</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -687,6 +962,82 @@ export default function AssessmentPageComponent({
       </div>
     );
   }
+
+  const renderProgramReasons = () => (
+    <div className="space-y-6">
+      <div>
+        <Label className="text-sm font-medium">What business outcomes do you want this program to support (e.g., culture change, succession planning, innovation, performance improvement)?</Label>
+        <div className="space-y-3 mt-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {programReasonsOptions.map((reason) => (
+              <Card
+                key={reason}
+                className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
+                  data.programReasons.reasons.includes(reason)
+                    ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 shadow-lg'
+                    : 'hover:border-blue-300 hover:bg-gray-50'
+                }`}
+                onClick={() => {
+                  const newReasons = data.programReasons.reasons.includes(reason)
+                    ? data.programReasons.reasons.filter(r => r !== reason)
+                    : [...data.programReasons.reasons, reason];
+                  updateData('programReasons', 'reasons', newReasons);
+                }}
+              >
+                <CardContent className="p-4">
+                  <div className="text-center space-y-2">
+                    <div className={`font-semibold text-sm ${
+                      data.programReasons.reasons.includes(reason) ? 'text-blue-800' : 'text-gray-900'
+                    }`}>
+                      {reason}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          {data.programReasons.reasons.includes('Other') && (
+            <div className="mt-3">
+              <Label className="text-sm font-medium">Other Reasons</Label>
+              <Textarea
+                value={data.programReasons.otherReasons}
+                onChange={(e) => updateData('programReasons', 'otherReasons', e.target.value)}
+                placeholder="Please specify other business outcomes you want to achieve..."
+                className="min-h-[80px]"
+              />
+            </div>
+          )}
+          
+          {data.programReasons.reasons.length > 0 && (
+            <div className="mt-3">
+              <Label className="text-sm font-medium">Selected Reasons:</Label>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {data.programReasons.reasons.map((reason) => (
+                  <Badge key={reason} variant="secondary" className="text-xs">
+                    {reason}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">Additional Context & Goals (Optional)</Label>
+        <Textarea
+          value={data.programReasons.additionalContext || ''}
+          onChange={(e) => updateData('programReasons', 'additionalContext', e.target.value)}
+          placeholder="Please describe your specific needs, challenges, and business outcomes goals in detail. This helps us create a more tailored program for your organization..."
+          className="min-h-[120px]"
+        />
+        <p className="text-xs text-muted-foreground">
+          Feel free to share your organization's unique challenges, specific goals, or any additional context that would help us understand your needs better.
+        </p>
+      </div>
+    </div>
+  );
 
   const renderOrganizationalGaps = () => (
     <div className="space-y-6">
@@ -722,49 +1073,7 @@ export default function AssessmentPageComponent({
     </div>
   );
 
-  const renderDevelopmentPlan = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Timeline</Label>
-          <Select value={data.developmentPlan.timeline} onValueChange={(value) => updateData('developmentPlan', 'timeline', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select timeline" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="3-months">3 months</SelectItem>
-              <SelectItem value="6-months">6 months</SelectItem>
-              <SelectItem value="12-months">12 months</SelectItem>
-              <SelectItem value="18-months">18 months</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label>Budget Range</Label>
-          <Select value={data.developmentPlan.budget} onValueChange={(value) => updateData('developmentPlan', 'budget', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select budget range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
-              <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
-              <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
-              <SelectItem value="100k+">$100,000+</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label>Success Metrics</Label>
-        <Textarea
-          value={data.developmentPlan.successMetrics}
-          onChange={(e) => updateData('developmentPlan', 'successMetrics', e.target.value)}
-          placeholder="Describe how you'll measure success"
-          rows={4}
-        />
-      </div>
-    </div>
-  );
+
 
   const renderGeneratingProgram = () => (
     <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
@@ -813,20 +1122,10 @@ export default function AssessmentPageComponent({
 
   const renderGroupedDetails = () => (
     <div className="space-y-10">
-      {/* Organization Scope */}
+      {/* Program Reasons */}
       <div>
-                    <h3 className="text-lg mb-2">Organization Scope</h3>
-        {renderOrganizationScope()}
-      </div>
-      {/* Organizational Gaps */}
-      <div>
-                    <h3 className="text-lg mb-2">Organizational Gaps</h3>
-        {renderOrganizationalGaps()}
-      </div>
-      {/* Development Plan */}
-      <div>
-                    <h3 className="text-lg mb-2">Development Plan</h3>
-        {renderDevelopmentPlan()}
+        <h3 className="text-lg mb-2">Program Objectives</h3>
+        {renderProgramReasons()}
       </div>
     </div>
   );
@@ -836,7 +1135,7 @@ export default function AssessmentPageComponent({
     return (
       <DevelopmentProgram 
         program={generatedProgram}
-        leaders={data.levels} // pass levels as leaders for now
+        leaders={data.targetGroups} // pass targetGroups as leaders for now
         summary={summary}
         onStartOver={() => setCurrentStep(1)}
       />
@@ -870,13 +1169,13 @@ export default function AssessmentPageComponent({
                 <ClipboardList className="h-5 w-5" />
                 {currentStep === 1 && 'Assessor Information'}
                 {currentStep === 2 && 'Organization Details & Plan'}
-                {currentStep === 3 && 'Leadership Levels Assessment'}
+                {currentStep === 3 && 'Target Groups Assessment'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {currentStep === 1 && renderAssessorInfo()}
               {currentStep === 2 && renderGroupedDetails()}
-              {currentStep === 3 && renderLevels()}
+              {currentStep === 3 && renderTargetGroups()}
             </CardContent>
           </Card>
           {/* Navigation */}
