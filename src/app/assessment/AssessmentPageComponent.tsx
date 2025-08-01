@@ -23,7 +23,10 @@ import {
   Loader2,
   Sparkles,
   Plus,
-  Trash2
+  Trash2,
+  Building2,
+  Users,
+  Briefcase
 } from 'lucide-react';
 import DevelopmentProgram from '@/components/assessment/DevelopmentProgram';
 import { 
@@ -429,56 +432,113 @@ export default function AssessmentPageComponent({
 
   const renderAssessorInfo = () => (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Full Name *</Label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+            Full Name <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="name"
             value={data.assessorInfo.name}
             onChange={(e) => updateData('assessorInfo', 'name', e.target.value)}
             placeholder="Enter your full name"
+            className="h-11"
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address *</Label>
+        <div className="space-y-3">
+          <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+            Email Address <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="email"
             type="email"
             value={data.assessorInfo.email}
             onChange={(e) => updateData('assessorInfo', 'email', e.target.value)}
             placeholder="Enter your email"
+            className="h-11"
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="company">Company/Organization *</Label>
-          <Input
-            id="company"
-            value={data.assessorInfo.company}
-            onChange={(e) => updateData('assessorInfo', 'company', e.target.value)}
-            placeholder="Enter your company name"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="role">Your Role</Label>
-          <Select value={data.assessorInfo.role} onValueChange={(value) => updateData('assessorInfo', 'role', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select your role" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="executive">Executive</SelectItem>
-              <SelectItem value="hr-leader">HR Leader</SelectItem>
-              <SelectItem value="consultant">Consultant</SelectItem>
-            </SelectContent>
-          </Select>
+
+      <div className="space-y-3">
+        <Label htmlFor="company" className="text-sm font-medium text-gray-700">
+          Company/Organization <span className="text-red-500">*</span>
+        </Label>
+        <Input
+          id="company"
+          value={data.assessorInfo.company}
+          onChange={(e) => updateData('assessorInfo', 'company', e.target.value)}
+          placeholder="Enter your company name"
+          className="h-11"
+        />
+      </div>
+
+      <div className="space-y-3">
+        <Label className="text-sm font-medium text-gray-700">Your Role</Label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+              { 
+                value: 'executive', 
+                label: 'Executive', 
+                description: 'C-level or senior leadership',
+                icon: Building2
+              },
+              { 
+                value: 'hr-leader', 
+                label: 'HR Leader', 
+                description: 'Human resources professional',
+                icon: Users
+              },
+              { 
+                value: 'consultant', 
+                label: 'Consultant', 
+                description: 'External advisor or consultant',
+                icon: Briefcase
+              }
+            ].map((role) => {
+              const IconComponent = role.icon;
+              return (
+                <Card
+                  key={role.value}
+                  className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] ${
+                    data.assessorInfo.role === role.value
+                      ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 shadow-lg'
+                      : 'hover:border-blue-300 hover:bg-gray-50'
+                  }`}
+                  onClick={() => updateData('assessorInfo', 'role', role.value)}
+                >
+                  <CardContent className="p-5">
+                    <div className="text-center space-y-3">
+                      <div className={`flex justify-center ${
+                        data.assessorInfo.role === role.value ? 'text-blue-600' : 'text-gray-600'
+                      }`}>
+                        <IconComponent size={24} />
+                      </div>
+                      <div className={`font-semibold text-sm ${
+                        data.assessorInfo.role === role.value ? 'text-blue-800' : 'text-gray-900'
+                      }`}>
+                        {role.label}
+                      </div>
+                      <div className={`text-xs leading-relaxed ${
+                        data.assessorInfo.role === role.value ? 'text-blue-700' : 'text-gray-500'
+                      }`}>
+                        {role.description}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="companySize">Company Size</Label>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <Label htmlFor="companySize" className="text-sm font-medium text-gray-700">
+            Company Size
+          </Label>
           <Select value={data.assessorInfo.companySize} onValueChange={(value) => updateData('assessorInfo', 'companySize', value)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select company size" />
             </SelectTrigger>
             <SelectContent>
@@ -488,10 +548,12 @@ export default function AssessmentPageComponent({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="industry">Industry</Label>
+        <div className="space-y-3">
+          <Label htmlFor="industry" className="text-sm font-medium text-gray-700">
+            Industry
+          </Label>
           <Select value={data.assessorInfo.industry} onValueChange={(value) => updateData('assessorInfo', 'industry', value)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select industry" />
             </SelectTrigger>
             <SelectContent>
