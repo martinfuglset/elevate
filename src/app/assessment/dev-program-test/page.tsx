@@ -13,7 +13,7 @@ const mockAssessmentData = {
     industry: 'Technology'
   },
   organizationScope: {
-    totalLeaders: 3, // This will be automatically calculated from the leaders array
+    totalLeaders: 3, // This will be automatically calculated from the targetGroups array
     departments: ['Sales', 'Engineering/Technology', 'Human Resources'],
     assessmentFocus: ['Leadership Development', 'Succession Planning', 'Strategic Alignment']
   },
@@ -27,73 +27,19 @@ const mockAssessmentData = {
       estimatedCount: '2',
       preferredLearningStyle: ['In-person Workshops', 'Individual Coaching'],
       otherLearningStyles: '',
-      programIntensity: 'Modular Program (spread over time)'
+      programIntensity: 'Modular Program (spread over time)',
+      timeline: '6 months'
     }
   ],
   programReasons: {
     reasons: ['Succession Planning', 'Performance Improvement'],
-    otherReasons: ''
+    otherReasons: '',
+    additionalContext: 'Need to develop leadership capabilities to support organizational growth and digital transformation initiatives.'
   },
-  leaders: [
-    {
-      id: 'l1',
-      name: 'Alice Johnson',
-      role: 'VP of Sales',
-      department: 'Sales',
-      experience: '8 years',
-      performance: 'high' as const,
-      competencies: ['Strategic Thinking', 'Communication', 'Team Building'],
-      developmentNeeds: ['Digital Transformation', 'Data-Driven Decision Making'],
-      potential: 'high' as const,
-      priority: 'high' as const
-    },
-    {
-      id: 'l2',
-      name: 'Bob Smith',
-      role: 'Head of Engineering',
-      department: 'Engineering/Technology',
-      experience: '12 years',
-      performance: 'meeting' as const,
-      competencies: ['Technical Leadership', 'Innovation'],
-      developmentNeeds: ['Strategic Thinking', 'Change Management'],
-      potential: 'medium' as const,
-      priority: 'medium' as const
-    },
-    {
-      id: 'l3',
-      name: 'Carol Lee',
-      role: 'HR Director',
-      department: 'Human Resources',
-      experience: '6 years',
-      performance: 'high' as const,
-      competencies: ['Team Building', 'Communication'],
-      developmentNeeds: ['Strategic Alignment', 'Business Acumen'],
-      potential: 'high' as const,
-      priority: 'high' as const
-    },
-    {
-      id: 'l4',
-      name: 'David Kim',
-      role: 'Product Manager',
-      department: 'Product',
-      experience: '4 years',
-      performance: 'needs-improvement' as const,
-      competencies: ['Innovation'],
-      developmentNeeds: ['Leadership Skills', 'Team Management'],
-      potential: 'medium' as const,
-      priority: 'low' as const
-    }
-  ],
   organizationalGaps: {
     missingSkills: ['Strategic Planning', 'Digital Transformation', 'Data-Driven Decision Making'],
     successionGaps: ['C-Suite Succession', 'VP/Director Level'],
     strategicAlignment: 'Need better alignment between leadership capabilities and organizational strategic goals'
-  },
-  developmentPlan: {
-    priorityLevels: ['l1', 'l3'],
-    timeline: '6-months',
-    budget: '25k-50k',
-    successMetrics: 'Improved team performance, better retention, successful promotions'
   }
 };
 
